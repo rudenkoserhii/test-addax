@@ -6,14 +6,15 @@ import { PrivateRoute } from './PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute';
 import { refreshUser } from 'redux/auth/operations';
 import { useAuth } from 'hooks';
+import { AppDispatch } from 'redux/store';
 
-const HomePage = lazy(() => import('../pages/Home/Home'));
-const RegisterPage = lazy(() => import('../pages/Register/Register'));
-const LoginPage = lazy(() => import('../pages/Login/Login'));
-const CalendarPage = lazy(() => import('../pages/Calendar/Calendar'));
+const HomePage = lazy(() => import('pages/Home/Home'));
+const RegisterPage = lazy(() => import('pages/Register/Register'));
+const LoginPage = lazy(() => import('pages/Login/Login'));
+const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
 export const App = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const { isRefreshing } = useAuth();
 
   useEffect(() => {

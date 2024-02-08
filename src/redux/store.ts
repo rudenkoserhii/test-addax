@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { Action, ThunkAction, UnknownAction, configureStore } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -8,22 +8,16 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
+  PersistConfig,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { contactsReducer } from './contacts/slice';
-import { filterSlice } from './filter/slice';
-import { authReducer } from './auth/slice';
+import { tasksReducer } from 'redux/tasks/slice';
+import { filterSlice } from 'redux/filter/slice';
+import { StateAuth, authReducer } from 'redux/auth/slice';
 
-const middleware = getDefaultMiddleware => [
-  ...getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
-];
+export type RootState = ReturnType<typeof store.getState>;
 
-// Persisting token field from auth slice to localstorage
-const authPersistConfig = {
+const authPersistConfig: PersistConfig<StateAuth> = {
   key: 'auth',
   storage,
   whitelist: ['token'],
@@ -31,12 +25,20 @@ const authPersistConfig = {
 
 export const store = configureStore({
   reducer: {
-    auth: persistReducer(authPersistConfig, authReducer),
-    contacts: contactsReducer,
+    auth: persistReducer<StateAuth, UnknownAction>(authPersistConfig, authReducer),
+    tasks: tasksReducer,
     filter: filterSlice.reducer,
   },
-  middleware,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
   devTools: process.env.NODE_ENV === 'development',
 });
 
 export const persistor = persistStore(store);
+
+export type AppDispatch = typeof store.dispatch;
+export type AppThunk = ThunkAction<void, RootState, null, Action<string>>;

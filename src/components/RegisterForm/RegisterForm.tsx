@@ -1,18 +1,22 @@
 import { useDispatch } from 'react-redux';
-import { register } from 'redux/auth/operations';
+import { signUp } from 'redux/auth/operations';
 import { FormStyled, LabelStyled, InputStyled, ButtonStyled } from './RegisterForm.styled';
+import { AppDispatch } from 'redux/store';
+import { FormEvent } from 'react';
+import { FormElements } from 'types';
 
 export const RegisterForm = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formElements = form.elements as FormElements;
     dispatch(
-      register({
-        name: form.elements.name.value,
-        email: form.elements.email.value,
-        password: form.elements.password.value,
+      signUp({
+        name: formElements?.name?.value,
+        email: formElements?.email?.value,
+        password: formElements?.password?.value,
       })
     );
     form.reset();
@@ -32,7 +36,7 @@ export const RegisterForm = () => {
         Password
         <InputStyled type="password" name="password" />
       </LabelStyled>
-      <ButtonStyled type="submit">Register</ButtonStyled>
+      <ButtonStyled type="submit">Sign Up</ButtonStyled>
     </FormStyled>
   );
 };

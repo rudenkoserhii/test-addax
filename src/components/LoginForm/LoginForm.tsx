@@ -1,17 +1,21 @@
 import { useDispatch } from 'react-redux';
 import { logIn } from 'redux/auth/operations';
 import { FormStyled, LabelStyled, InputStyled, ButtonStyled } from './LoginForm.styled';
+import { AppDispatch } from 'redux/store';
+import { FormEvent } from 'react';
+import { FormElements } from 'types';
 
 export const LoginForm = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formElements = form.elements as FormElements;
     dispatch(
       logIn({
-        email: form.elements.email.value,
-        password: form.elements.password.value,
+        email: formElements?.email?.value,
+        password: formElements?.password?.value,
       })
     );
     form.reset();
