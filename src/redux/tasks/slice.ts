@@ -8,7 +8,7 @@ const handlePending = (state: StateTasks) => {
   state.isLoading = true;
 };
 
-const handleRejected = (state: StateTasks, action) => {
+const handleRejected = (state: StateTasks, action: any) => {
   state.isLoading = false;
   state.error = action.payload;
 };

@@ -1,14 +1,10 @@
-import { NavLinkStyled } from './AuthNav.styled';
+import { NavLinkStyled } from 'components/AuthNav/AuthNav.styled';
 
-export const AuthNav = () => {
+export const AuthNav = (): JSX.Element => {
   return (
     <div>
-      <NavLinkStyled to="/register">
-        Register
-      </NavLinkStyled>
-      <NavLinkStyled to="/login">
-        Log In
-      </NavLinkStyled>
+      <NavLinkStyled to="/register">Sign Up</NavLinkStyled>
+      <NavLinkStyled to="/login">Log In</NavLinkStyled>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { AppDispatch } from 'redux/store';
 import { FormEvent } from 'react';
 import { FormElements } from 'types';
 
-export const RegisterForm = () => {
+export const RegisterForm = (): JSX.Element => {
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

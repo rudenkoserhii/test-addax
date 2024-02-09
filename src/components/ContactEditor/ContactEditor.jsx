@@ -1,5 +1,5 @@
+import Notiflix from 'notiflix';
 import { FormStyled, InputStyled, ButtonStyled } from './ContactEditor.styled';
-import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/tasks/operations';
 import { selectAllContacts } from 'redux/tasks/selectors';
@@ -23,7 +23,7 @@ export const ContactEditor = () => {
       form.reset();
       return;
     }
-    toast.error('Fields cannot be empty');
+    Notiflix.Notify.error('Fields cannot be empty');
   };
 
   return (

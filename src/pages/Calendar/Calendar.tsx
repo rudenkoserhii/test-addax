@@ -7,10 +7,10 @@ import { getTasks } from 'redux/tasks/operations';
 import { selectLoading } from 'redux/tasks/selectors';
 import { AppDispatch } from 'redux/store';
 import { TasksFilter } from 'components/TasksFilter/TasksFilter';
-import Notiflix from 'notiflix';
 import { CalendarHeader } from 'components/CalendarHeader/CalendarHeader';
+import { Loading } from 'components/Loading/Loading';
 
-export default function Calendar() {
+export default function Calendar(): JSX.Element {
   const dispatch: AppDispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
 
@@ -18,18 +18,23 @@ export default function Calendar() {
     dispatch(getTasks());
   }, [dispatch]);
 
-  if (isLoading) {
-    return Notiflix.Loading.circle();
-  }
   return (
     <HelmetProvider>
       <Helmet>
         <title>Your Calendar</title>
       </Helmet>
       <ContactEditor />
-      <CalendarHeader />
-      <CalendarGrid />
-      <CalendarFooter />
+      <CalendarHeader
+        setPrevItem={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+        setNextItem={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
+      {/* <CalendarGrid />
+      <CalendarFooter /> */}
+      <Loading isVisible={isLoading} />
     </HelmetProvider>
   );
 }

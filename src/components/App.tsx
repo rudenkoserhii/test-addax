@@ -1,9 +1,9 @@
 import { useEffect, lazy } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { Layout } from './Layout';
-import { PrivateRoute } from './PrivateRoute';
-import { RestrictedRoute } from './RestrictedRoute';
+import { LayOut } from './LayOut/LayOut';
+import { PrivateRoute } from './PrivateRoute/PrivateRoute';
+import { RestrictedRoute } from './RestrictedRoute/RestrictedRoute';
 import { refreshUser } from 'redux/auth/operations';
 import { useAuth } from 'hooks';
 import { AppDispatch } from 'redux/store';
@@ -25,7 +25,7 @@ export const App = () => {
     <b>Refreshing user...</b>
   ) : (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<LayOut />}>
         <Route index element={<HomePage />} />
         <Route path="*" element={<HomePage />} />
         <Route

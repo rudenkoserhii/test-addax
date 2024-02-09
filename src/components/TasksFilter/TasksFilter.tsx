@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { addFilter } from 'redux/filter/slice';
 
-export const TasksFilter = () => {
+export const TasksFilter = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const filterId = nanoid();
