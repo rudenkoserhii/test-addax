@@ -1,5 +1,5 @@
 import { Wrapper } from 'components/CalendarHeader/CalendarHeader.styled';
-import { Switcher, UpDown } from 'components/CalendarHeader/components';
+import { Download, Import, Switcher, UpDown } from 'components/CalendarHeader/components';
 import { TasksFilter } from 'components/TasksFilter/TasksFilter';
 import { useState } from 'react';
 
@@ -16,6 +16,8 @@ export const CalendarHeader = ({
     <Wrapper>
       <UpDown setPrevItem={setPrevItem} setNextItem={setNextItem} weekOrMonth={weekOrMonth} />
       <TasksFilter />
+      <Download />
+      <Import />
       <Switcher setWeekOrMonthUp={(value) => setWeekOrMonth(value)} />
     </Wrapper>
   );

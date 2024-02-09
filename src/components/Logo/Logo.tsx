@@ -7,7 +7,7 @@ import {
 } from 'components/Logo/Logo.styled';
 
 export const Logo = () => (
-  <WrapperLink to="/">
+  <WrapperLink to="/" title="Go to Home page">
     <LogoStyled />
     <TextBox>
       <TextTitle>CalenDate</TextTitle>

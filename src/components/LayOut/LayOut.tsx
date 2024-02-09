@@ -4,7 +4,7 @@ import { AppBar } from 'components/AppBar/AppBar';
 import { Wrapper } from 'components/LayOut/LayOut.styled';
 
 export const LayOut = (): JSX.Element => (
-  <Wrapper>
+  <Wrapper id="canvas">
     <AppBar />
     <Suspense fallback={null}>
       <Outlet />

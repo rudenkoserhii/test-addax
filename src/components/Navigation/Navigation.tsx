@@ -1,5 +1,5 @@
 import { useAuth } from 'hooks';
-import { NavLinkStyled } from './Navigation.styled';
+import { NavLinkStyled, IconCalendarStyled, IconHomeStyled } from './Navigation.styled';
 
 export const Navigation = (): JSX.Element => {
   // const { isLoggedIn } = useAuth();
@@ -7,8 +7,14 @@ export const Navigation = (): JSX.Element => {
 
   return (
     <nav>
-      <NavLinkStyled to="/">Home</NavLinkStyled>
-      {isLoggedIn && <NavLinkStyled to="/calendar">Contacts</NavLinkStyled>}
+      <NavLinkStyled to="/" title="Go to Home page">
+        <IconHomeStyled />
+      </NavLinkStyled>
+      {isLoggedIn && (
+        <NavLinkStyled to="/calendar" title="Go to Calendar page">
+          <IconCalendarStyled />
+        </NavLinkStyled>
+      )}
     </nav>
   );
 };
