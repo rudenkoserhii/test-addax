@@ -8,6 +8,7 @@ import { selectLoading } from 'redux/tasks/selectors';
 import { AppDispatch } from 'redux/store';
 import { TasksFilter } from 'components/TasksFilter/TasksFilter';
 import Notiflix from 'notiflix';
+import { CalendarHeader } from 'components/CalendarHeader/CalendarHeader';
 
 export default function Calendar() {
   const dispatch: AppDispatch = useDispatch();
@@ -26,14 +27,9 @@ export default function Calendar() {
         <title>Your Calendar</title>
       </Helmet>
       <ContactEditor />
-      <Wrapper>
-        <UpDown />
-        <CalendarHeader />
-
-        <TasksFilter />
-        <Switcher />
-      </Wrapper>
+      <CalendarHeader />
       <CalendarGrid />
+      <CalendarFooter />
     </HelmetProvider>
   );
 }
