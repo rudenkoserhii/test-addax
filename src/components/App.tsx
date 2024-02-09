@@ -4,9 +4,9 @@ import { Route, Routes } from 'react-router-dom';
 import { LayOut } from './LayOut/LayOut';
 import { PrivateRoute } from './PrivateRoute/PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute/RestrictedRoute';
-import { refreshUser } from 'redux/auth/operations';
+import { refreshUser } from 'store/auth/operations';
 import { useAuth } from 'hooks';
-import { AppDispatch } from 'redux/store';
+import { AppDispatch } from 'store/store';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
 const RegisterPage = lazy(() => import('pages/Register/Register'));
@@ -36,10 +36,11 @@ export const App = () => {
           path="/login"
           element={<RestrictedRoute redirectTo="/calendar" component={<LoginPage />} />}
         />
-        <Route
+        {/* <Route
           path="/calendar"
           element={<PrivateRoute redirectTo="/login" component={<CalendarPage />} />}
-        />
+        /> */}
+        <Route path="/calendar" element={<CalendarPage />} />
       </Route>
     </Routes>
   );

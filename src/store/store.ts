@@ -11,9 +11,9 @@ import {
   PersistConfig,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { tasksReducer } from 'redux/tasks/slice';
-import { filterSlice } from 'redux/filter/slice';
-import { StateAuth, authReducer } from 'redux/auth/slice';
+import { tasksReducer } from 'store/tasks/slice';
+import { filterSlice } from 'store/filter/slice';
+import { StateAuth, authReducer } from 'store/auth/slice';
 
 export type RootState = ReturnType<typeof store.getState>;
 

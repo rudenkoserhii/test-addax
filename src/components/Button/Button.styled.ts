@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const ButtonStyled = styled.button`
   width: ${(p) => p.theme.space[7]}px;
+  height: ${(p) => p.theme.space[10]}px;
 
   border: none;
   font: inherit;
@@ -9,7 +10,7 @@ export const ButtonStyled = styled.button`
   outline: none;
   margin-left: auto;
   border-radius: ${(p) => p.theme.radii.normal};
-  padding: ${(p) => p.theme.space[3]}px ${(p) => p.theme.space[4]}px;
+  padding: ${(p) => p.theme.space[2]}px ${(p) => p.theme.space[4]}px;
   background-color: ${(p) => p.theme.colors.lightblue};
   color: ${(p) => p.theme.colors.white};
   transition: all 200ms ease-in;

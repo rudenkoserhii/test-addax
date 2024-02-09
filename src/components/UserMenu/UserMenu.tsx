@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
-import { logOut } from 'redux/auth/operations';
+import { logOut } from 'store/auth/operations';
 import { useAuth } from 'hooks';
 import { Wrapper, Text, ButtonStyled, Span } from './UserMenu.styled';
-import { AppDispatch } from 'redux/store';
+import { AppDispatch } from 'store/store';
 
 export const UserMenu = () => {
   const dispatch: AppDispatch = useDispatch();

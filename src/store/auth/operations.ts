@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from 'redux/store';
+import { RootState } from 'store/store';
 import { AsyncThunkConfig, GetThunkAPI } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
 axios.defaults.baseURL = 'https://connections-api.herokuapp.com/';
@@ -20,7 +20,9 @@ export const signUp = createAsyncThunk(
   async (credentials: CredentialsType, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const res = await axios.post('/users/signup', credentials);
+
       setAuthHeader(res.data.token);
+
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);
@@ -33,6 +35,7 @@ export const logIn = createAsyncThunk(
   async (credentials: CredentialsType, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const res = await axios.post('/users/login', credentials);
+
       setAuthHeader(res.data.token);
 
       return res.data;
@@ -68,6 +71,7 @@ export const refreshUser = createAsyncThunk(
     try {
       setAuthHeader(persistedToken);
       const res = await axios.get('/users/current');
+
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);

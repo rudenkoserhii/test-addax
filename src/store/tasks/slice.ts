@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { logOut } from 'redux/auth/operations';
+import { logOut } from 'store/auth/operations';
 import { getTasks, addTask, deleteTask, editTask } from './operations';
 import { AxiosError } from 'axios';
 import { Task } from 'types';
@@ -8,6 +8,7 @@ const handlePending = (state: StateTasks) => {
   state.isLoading = true;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleRejected = (state: StateTasks, action: any) => {
   state.isLoading = false;
   state.error = action.payload;
@@ -50,6 +51,7 @@ const tasksSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         const index = state.tasks.findIndex((task) => task.id === action.payload.id);
+
         state.tasks.splice(index, 1);
       })
       .addCase(editTask.fulfilled, (state, action) => {
@@ -63,6 +65,7 @@ const tasksSlice = createSlice({
           content: action.payload.content,
           label: action.payload.label,
         };
+
         state.tasks[index] = task;
       })
       .addCase(logOut.fulfilled, (state) => {

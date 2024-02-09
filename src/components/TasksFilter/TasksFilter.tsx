@@ -1,23 +1,30 @@
-import { Title, InputStyled } from './TasksFilter.styled';
-import { nanoid } from 'nanoid';
+import { InputStyled, IconSearchStyled, LabelStyled, Button } from './TasksFilter.styled';
 import { useDispatch } from 'react-redux';
-import { addFilter } from 'redux/filter/slice';
+import { addFilter } from 'store/filter/slice';
+import { AppDispatch } from 'store/store';
 
 export const TasksFilter = (): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-  const filterId = nanoid();
   return (
-    <>
-      <Title>Find contacts by name</Title>
+    <LabelStyled>
       <InputStyled
         type="text"
-        id={filterId}
         name="filter"
-        onChange={(e) => {
-          dispatch(addFilter(e.currentTarget.value));
+        placeholder="Find tasks by name"
+        onChange={(event) => {
+          dispatch(addFilter(event.currentTarget.value));
         }}
       />
-    </>
+      <Button
+        type="button"
+        onClick={(event) => {
+          console.log((event.currentTarget.parentNode?.children[0] as HTMLInputElement).value);
+          dispatch(addFilter(event.currentTarget.value));
+        }}
+      >
+        <IconSearchStyled />
+      </Button>
+    </LabelStyled>
   );
 };

@@ -4,20 +4,22 @@ import { ButtonStyled, TextStyled } from './Button.styled';
 export const Button = ({
   title,
   content,
-  children,
+  Icon,
   handleClick,
   disabled,
 }: {
   title?: string;
   content?: string;
-  children?: ReactNode;
+  Icon?: React.FunctionComponent<
+    React.SVGProps<SVGSVGElement> & {
+      title?: string | undefined;
+    }
+  >;
   handleClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
-}) => {
-  return (
-    <ButtonStyled type="button" onClick={handleClick} disabled={disabled} title={title}>
-      {content && <TextStyled>{content}</TextStyled>}
-      {children}
-    </ButtonStyled>
-  );
-};
+}) => (
+  <ButtonStyled type="button" onClick={handleClick} disabled={disabled} title={title}>
+    {content && <TextStyled>{content}</TextStyled>}
+    {Icon && <Icon />}
+  </ButtonStyled>
+);

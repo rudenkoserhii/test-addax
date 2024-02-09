@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ContactList } from 'components/ContactList/ContactList';
 import { ContactEditor } from 'components/ContactEditor/ContactEditor';
-import { getTasks } from 'redux/tasks/operations';
-import { selectLoading } from 'redux/tasks/selectors';
-import { AppDispatch } from 'redux/store';
+import { getTasks } from 'store/tasks/operations';
+import { selectLoading } from 'store/tasks/selectors';
+import { AppDispatch } from 'store/store';
 import { TasksFilter } from 'components/TasksFilter/TasksFilter';
 import { CalendarHeader } from 'components/CalendarHeader/CalendarHeader';
 import { Loading } from 'components/Loading/Loading';
@@ -23,7 +23,7 @@ export default function Calendar(): JSX.Element {
       <Helmet>
         <title>Your Calendar</title>
       </Helmet>
-      <ContactEditor />
+      {/* <ContactEditor /> */}
       <CalendarHeader
         setPrevItem={function (): void {
           throw new Error('Function not implemented.');

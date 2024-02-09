@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signUp, logIn, logOut, refreshUser } from 'redux/auth/operations';
+import { signUp, logIn, logOut, refreshUser } from 'store/auth/operations';
 
 export type StateAuth = {
   user: { name?: string | null; email: string | null };

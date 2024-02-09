@@ -8,6 +8,7 @@ export const getTasks = createAsyncThunk(
   async (_, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const res = await axios.get('/calendar');
+
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);
@@ -20,6 +21,7 @@ export const addTask = createAsyncThunk(
   async (objTask, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.post('/calendar', objTask);
+
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);
@@ -32,6 +34,7 @@ export const deleteTask = createAsyncThunk(
   async (taskId: string, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.delete(`/calendar/${taskId}`);
+
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);
@@ -44,6 +47,7 @@ export const editTask = createAsyncThunk(
   async (objTask: Task, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.patch(`/calendar/${objTask.id}`, objTask);
+
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);

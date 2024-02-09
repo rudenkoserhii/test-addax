@@ -9,7 +9,7 @@ export const theme = {
     lightgray: 'lightgray',
     blue: 'blue',
   },
-  space: [0, 2, 4, 8, 16, 32, 64, 128, 256],
+  space: [0, 2, 4, 8, 16, 32, 64, 128, 256, 24, 52],
   fonts: {
     body: 'system-ui, sans-serif',
     heading: 'system-ui, sans-serif',
@@ -26,6 +26,7 @@ export const theme = {
   fontWeights: {
     normal: 400,
     bold: 700,
+    extrabold: 900,
   },
   lineHeights: {
     body: 1.5,
@@ -43,7 +44,8 @@ export const theme = {
     round: '50%',
   },
   shadows: {
-    first: '0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.2)',
+    first:
+      '0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.2)',
     second: '0px 4px 4px rgba(0, 0, 0, 0.15)',
-},
+  },
 };

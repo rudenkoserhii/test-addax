@@ -6,14 +6,12 @@ import {
   TextSlogan,
 } from 'components/Logo/Logo.styled';
 
-export const Logo = () => {
-  return (
-    <WrapperLink to="/">
-      <LogoStyled />
-      <TextBox>
-        <TextTitle>CalenDate</TextTitle>
-        <TextSlogan>Plan Your Date with CalenDate</TextSlogan>
-      </TextBox>
-    </WrapperLink>
-  );
-};
+export const Logo = () => (
+  <WrapperLink to="/">
+    <LogoStyled />
+    <TextBox>
+      <TextTitle>CalenDate</TextTitle>
+      <TextSlogan>Plan Your Date with CalenDate</TextSlogan>
+    </TextBox>
+  </WrapperLink>
+);

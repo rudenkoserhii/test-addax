@@ -2,7 +2,8 @@ import { useAuth } from 'hooks';
 import { NavLinkStyled } from './Navigation.styled';
 
 export const Navigation = (): JSX.Element => {
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
+  const isLoggedIn = true;
 
   return (
     <nav>
