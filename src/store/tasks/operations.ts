@@ -1,15 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AsyncThunkConfig, GetThunkAPI } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import axios, { AxiosError } from 'axios';
-import { Task } from 'types';
+import { Task, WeekOrMonthRequest } from 'types';
 
 export const getTasks = createAsyncThunk(
   'calendar/getTasks',
-  async (_, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
+  async (objectWeekOrMonth: WeekOrMonthRequest, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
-      const res = await axios.get('/calendar');
+      const response = await axios.get('/calendar', { data: objectWeekOrMonth });
 
-      return res.data;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue((error as AxiosError).message);
     }
@@ -18,7 +18,7 @@ export const getTasks = createAsyncThunk(
 
 export const addTask = createAsyncThunk(
   'calendar/addTask',
-  async (objTask, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
+  async (objTask: Task, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.post('/calendar', objTask);
 

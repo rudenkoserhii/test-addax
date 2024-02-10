@@ -10,10 +10,10 @@ export const Button = styled.button`
   all: unset;
   appearance: none;
   cursor: pointer;
-  right: ${(p) => p.theme.space[3]}px;
+  margin-right: ${(p) => p.theme.space[2]}px;
   transition: all 200ms ease-in;
   & > svg > path {
-    fill: ${(p) => p.theme.colors.lightblue};
+    fill: ${(p) => p.theme.colors.grey};
     transition: all 200ms ease-in;
   }
   &:hover {

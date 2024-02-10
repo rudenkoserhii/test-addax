@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { ButtonStyled, TextStyled } from './Button.styled';
 
 export const Button = ({
@@ -7,6 +6,8 @@ export const Button = ({
   Icon,
   handleClick,
   disabled,
+  active,
+  w,
 }: {
   title?: string;
   content?: string;
@@ -17,8 +18,17 @@ export const Button = ({
   >;
   handleClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
+  active?: boolean;
+  w?: number;
 }) => (
-  <ButtonStyled type="button" onClick={handleClick} disabled={disabled} title={title}>
+  <ButtonStyled
+    type="button"
+    onClick={handleClick}
+    disabled={disabled}
+    title={title}
+    className={`${active && 'active'}`}
+    data-width={w}
+  >
     {content && <TextStyled>{content}</TextStyled>}
     {Icon && <Icon />}
   </ButtonStyled>

@@ -1,24 +1,34 @@
 import { Wrapper } from 'components/CalendarHeader/CalendarHeader.styled';
-import { Download, Import, Switcher, UpDown } from 'components/CalendarHeader/components';
+import { Current, Download, Import, Switcher, UpDown } from 'components/CalendarHeader/components';
 import { TasksFilter } from 'components/TasksFilter/TasksFilter';
-import { useState } from 'react';
+import { WeekOrMonth } from 'types';
 
 export const CalendarHeader = ({
   setPrevItem,
   setNextItem,
+  weekOrMonth,
+  setWeekOrMonth,
+  currentWeekOrMonth,
+  setCurrentWeekOrMonth,
 }: {
   setPrevItem: () => void;
   setNextItem: () => void;
-}) => {
-  const [weekOrMonth, setWeekOrMonth] = useState<string>('month');
+  weekOrMonth: string;
+  setWeekOrMonth: (value: string) => void;
 
-  return (
-    <Wrapper>
-      <UpDown setPrevItem={setPrevItem} setNextItem={setNextItem} weekOrMonth={weekOrMonth} />
-      <TasksFilter />
-      <Download />
-      <Import />
-      <Switcher setWeekOrMonthUp={(value) => setWeekOrMonth(value)} />
-    </Wrapper>
-  );
-};
+  currentWeekOrMonth: WeekOrMonth;
+  setCurrentWeekOrMonth: ({ year, weekOrMonth }: WeekOrMonth) => void;
+}) => (
+  <Wrapper>
+    <UpDown setPrevItem={setPrevItem} setNextItem={setNextItem} weekOrMonth={weekOrMonth} />
+    <TasksFilter />
+    <Current
+      currentWeekOrMonth={currentWeekOrMonth}
+      setCurrentWeekOrMonth={setCurrentWeekOrMonth}
+      weekOrMonth={weekOrMonth}
+    />
+    <Download />
+    <Import />
+    <Switcher setWeekOrMonth={setWeekOrMonth} />
+  </Wrapper>
+);

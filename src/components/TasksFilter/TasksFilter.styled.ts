@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
 
 export const InputStyled = styled.input`
-  /* flex-grow: 1; */
   height: ${(p) => p.theme.space[10]}px;
   padding: ${(p) => p.theme.space[0]}px ${(p) => p.theme.space[10]}px ${(p) => p.theme.space[0]}px
     ${(p) => p.theme.space[3]}px;
@@ -15,7 +14,6 @@ export const InputStyled = styled.input`
   &:focus-visible {
     outline: 1px solid ${(p) => p.theme.colors.lightblue};
   }
-  /* margin-bottom: ${(p) => p.theme.space[4]}px; */
 `;
 
 export const LabelStyled = styled.label`

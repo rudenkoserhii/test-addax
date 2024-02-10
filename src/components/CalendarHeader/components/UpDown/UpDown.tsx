@@ -29,7 +29,17 @@ export const UpDown = ({
   //         : Number(selectedWeekOrMonth) === currentMonth;
 
   <Wrapper>
-    <Button handleClick={setPrevItem} title={`Previous ${weekOrMonth}`} Icon={IconArrowUpStyled} />
-    <Button handleClick={setNextItem} title={`Next ${weekOrMonth}`} Icon={IconArrowDownStyled} />
+    <Button
+      handleClick={setPrevItem}
+      title={`Previous ${weekOrMonth}`}
+      Icon={IconArrowUpStyled}
+      w={6}
+    />
+    <Button
+      handleClick={setNextItem}
+      title={`Next ${weekOrMonth}`}
+      Icon={IconArrowDownStyled}
+      w={6}
+    />
   </Wrapper>
 );

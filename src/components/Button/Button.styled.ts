@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from 'styled-components';
 
 export const ButtonStyled = styled.button`
-  width: ${(p) => p.theme.space[7]}px;
+  width: ${(p: any) => p.theme.space[p['data-width'] || 7]}px;
   height: ${(p) => p.theme.space[10]}px;
 
   border: none;
@@ -23,6 +24,10 @@ export const ButtonStyled = styled.button`
 
   &:active {
     ${(p) => p.theme.shadows.second};
+  }
+
+  &.active {
+    background-color: ${(p) => p.theme.colors.blue};
   }
 `;
 
