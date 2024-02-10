@@ -8,9 +8,12 @@ export const NavLinkStyled = styled(NavLink)`
   text-decoration: none;
   padding: ${(p) => p.theme.space[4]}px;
 
-  &.active > svg > path {
-    fill: ${(p) => p.theme.colors.lightblue};
-    transition: all 200ms ease-in;
+  &.active {
+    pointer-events: none;
+    & > svg > path {
+      fill: ${(p) => p.theme.colors.lightblue};
+      transition: all 200ms ease-in;
+    }
   }
 
   & > svg > path {

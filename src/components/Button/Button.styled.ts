@@ -28,6 +28,7 @@ export const ButtonStyled = styled.button`
 
   &.active {
     background-color: ${(p) => p.theme.colors.blue};
+    pointer-events: none;
   }
 `;
 

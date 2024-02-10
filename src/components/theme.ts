@@ -9,7 +9,7 @@ export const theme = {
     lightgray: 'lightgray',
     blue: 'blue',
   },
-  space: [0, 2, 4, 8, 16, 32, 64, 128, 256, 24, 52, 160],
+  space: [0, 2, 4, 8, 16, 32, 64, 128, 256, 24, 52, 160, 188],
   fonts: {
     body: 'system-ui, sans-serif',
     heading: 'system-ui, sans-serif',

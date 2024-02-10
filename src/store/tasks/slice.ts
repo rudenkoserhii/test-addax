@@ -64,6 +64,7 @@ const tasksSlice = createSlice({
           title: action.payload.title,
           content: action.payload.content,
           label: action.payload.label,
+          order: action.payload.order,
         };
 
         state.tasks[index] = task;

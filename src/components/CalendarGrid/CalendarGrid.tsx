@@ -1,36 +1,29 @@
-// CalendarGrid.tsx
-
 import React, { useEffect, useState } from 'react';
-import './CalendarGrid.css';
-import { checkDate } from 'utils';
+import { checkDate, getCurrentDate } from 'utils';
 import { days } from 'enums';
+import {
+  Cell,
+  CellTitle,
+  Table,
+  TableHead,
+  Wrapper,
+} from 'components/CalendarGrid/CalendarGrid.styled';
+import { DateCell } from 'components/DateCell/DateCell';
+import { nanoid } from 'nanoid';
+import { Task } from 'types';
 
-export const CalendarGrid: React.FC = () => {
+export const CalendarGrid = (): JSX.Element => {
   const [calendarData, setCalendarData] = useState<string[][]>([]);
-  const savedWeekOrMonth = localStorage.getItem('savedWeekOrMonth') || '1 2024'; // Default to January 2024 if not present
-  const weekOrMonthType = localStorage.getItem('weekOrMonth') || 'month'; // Default to 'month' if not present
+  const savedWeekOrMonth =
+    localStorage.getItem('savedWeekOrMonth') ||
+    `${new Date().getMonth() + 1} ${new Date().getFullYear()}`;
+  const weekOrMonthType = localStorage.getItem('weekOrMonth') || 'month';
 
   useEffect(() => {
-    // Get saved week or month data from local storage
     const [weekOrMonth, year] = savedWeekOrMonth.split(' ');
 
-    // Get week or month from local storage
-
-    // Render the calendar grid
     renderCalendarGrid(weekOrMonthType, parseInt(weekOrMonth), parseInt(year));
-
-    // Listen for changes in local storage and update the grid accordingly
-    window.addEventListener('storage', () => {
-      const updatedWeekOrMonth = localStorage.getItem('savedWeekOrMonth');
-      const updatedWeekOrMonthType = localStorage.getItem('weekOrMonth');
-
-      if (updatedWeekOrMonth && updatedWeekOrMonthType) {
-        const [updatedType, updatedYear] = updatedWeekOrMonth.split(' ');
-
-        renderCalendarGrid(updatedWeekOrMonthType, parseInt(updatedType), parseInt(updatedYear));
-      }
-    });
-  }, [weekOrMonthType, savedWeekOrMonth]); // Empty dependency array ensures that this effect runs only once, similar to componentDidMount
+  }, [weekOrMonthType, savedWeekOrMonth]);
 
   const renderCalendarGrid = (type: string, value: number, year: number) => {
     if (type === 'week') {
@@ -41,7 +34,6 @@ export const CalendarGrid: React.FC = () => {
   };
 
   const renderWeekView = (week: number, year: number) => {
-    // Render only one line with the days of the selected week
     const currentDate = new Date(year, 0, 1 + (week - 1) * 7);
     const weekArray: string[] = [];
 
@@ -60,7 +52,6 @@ export const CalendarGrid: React.FC = () => {
     const calendarArray: string[][] = [];
     let dayCounter = 1;
 
-    // Calculate the number of weeks needed
     const weeksInMonth = Math.ceil((daysInMonth + firstDayOfMonth) / 7);
 
     for (let i = 0; i < weeksInMonth; i++) {
@@ -68,7 +59,6 @@ export const CalendarGrid: React.FC = () => {
 
       for (let j = 0; j < 7; j++) {
         if (i === 0 && j < firstDayOfMonth) {
-          // Show days with date of the previous month
           const prevMonthDays =
             firstDayOfMonth > 0
               ? new Date(year, month - 1, -firstDayOfMonth + 1 + j).getDate()
@@ -76,13 +66,11 @@ export const CalendarGrid: React.FC = () => {
 
           weekArray.push(prevMonthDays.toString());
         } else if (dayCounter > daysInMonth) {
-          // Show days with date of the next month with reduced opacity
           const nextMonthDays = new Date(year, month, dayCounter - daysInMonth).getDate();
 
           weekArray.push(nextMonthDays.toString());
           dayCounter++;
         } else {
-          // Show days of the current month
           weekArray.push(`${dayCounter}`);
           dayCounter++;
         }
@@ -94,36 +82,83 @@ export const CalendarGrid: React.FC = () => {
     setCalendarData(calendarArray);
   };
 
+  const data: Task[] = [
+    {
+      id: '1',
+      date: '2024.02.11',
+      title: 'first',
+      content: 'first first',
+      label: [
+        {
+          id: '11',
+          color: 'red',
+          text: 'first label text',
+          order: 0,
+        },
+      ],
+      order: 0,
+    },
+    {
+      id: '2',
+      date: '2024.02.12',
+      title: 'second',
+      content: 'second second',
+      label: [
+        {
+          id: '11',
+          color: 'green',
+          text: 'first label text',
+          order: 0,
+        },
+      ],
+      order: 0,
+    },
+  ];
+
   return (
-    <div className="calendar-container">
-      <table>
-        <thead>
+    <Wrapper className="calendar-container" id="screenshot">
+      <Table>
+        <TableHead>
           <tr>
             {days.map((day) => (
-              <th>{day}</th>
+              <CellTitle key={nanoid()}>{day}</CellTitle>
             ))}
           </tr>
-        </thead>
+        </TableHead>
         <tbody>
           {calendarData.map((week, index) => (
             <tr key={index}>
-              {week.map((day, dayIndex) => (
-                <td
-                  key={dayIndex}
+              {week.map((day) => (
+                <Cell
+                  key={nanoid()}
                   className={
                     checkDate(index, calendarData.length - 1, day) || weekOrMonthType === 'week'
                       ? ''
                       : 'empty-day'
                   }
                 >
-                  {day}
-                </td>
+                  <DateCell
+                    day={day}
+                    tasks={
+                      data?.filter(
+                        (item) =>
+                          item.date ===
+                          getCurrentDate(
+                            Number(savedWeekOrMonth.split(' ')[1]),
+                            Number(savedWeekOrMonth.split(' ')[0]),
+                            day,
+                            weekOrMonthType
+                          )
+                      ) || ''
+                    }
+                  />
+                </Cell>
               ))}
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </Wrapper>
   );
 };
 
