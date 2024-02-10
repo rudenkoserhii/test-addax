@@ -7,7 +7,7 @@ import { downloadScreenshot } from 'utils';
 export const Download = () => (
   <Button
     type="button"
-    onClick={() => downloadScreenshot('canvas', 'myCalendar.png')}
+    onClick={() => downloadScreenshot('screenshot', 'myCalendar.png')}
     title="Save Calendar as JSON"
   >
     <IconPhotoStyled />

@@ -1,34 +1,24 @@
+import html2canvas from 'html2canvas';
 import Notiflix from 'notiflix';
 
-export function downloadScreenshot(elementId: string, fileName: string) {
-  const element: HTMLElement | null = document.getElementById(elementId);
+export function downloadScreenshot(elementId: string, fileName?: string): void {
+  const element = document.getElementById(elementId);
 
-  if (
-    !(element instanceof HTMLImageElement) &&
-    !(element instanceof HTMLCanvasElement) &&
-    !(element instanceof HTMLVideoElement) &&
-  ) {
-    Notiflix.Notify.failure(`Element with ID "${elementId}" is not a valid image source.`);
+  if (!element) {
+    Notiflix.Notify.failure(`Element with ID "${elementId}" not found.`);
+
     return;
   }
-  const canvas = document.createElement('canvas');
 
-  canvas.width = element?.offsetWidth;
-  canvas.height = element?.offsetHeight;
+  html2canvas(element).then((canvas) => {
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
 
-  const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    link.href = dataUrl;
+    link.download = fileName || 'downloaded_image.png';
 
-  context?.drawImage(element as CanvasImageSource, 0, 0, canvas.width, canvas.height);
-
-  const dataUrl = canvas.toDataURL('image/png');
-
-  const link = document.createElement('a');
-
-  link.href = dataUrl;
-  link.download = fileName || 'screenshot.png';
-
-  document.body.appendChild(link);
-  link.click();
-
-  document.body.removeChild(link);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
 }
