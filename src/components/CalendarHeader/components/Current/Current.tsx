@@ -20,19 +20,23 @@ export const Current = ({
   weekOrMonth,
 }: CurrentProp) => {
   const isWeek = weekOrMonth.toLowerCase() === 'week';
-
+  console.log(weekOrMonth);
+  console.log(currentWeekOrMonth);
   const getMonthNumber = (monthName: string): number => monthNames.indexOf(monthName) + 1;
 
   const handleInputChange = (value: number | string) => {
+    console.log('handlechange');
     let updatedValue: WeekOrMonth;
 
     if (isWeek) {
       updatedValue = { ...currentWeekOrMonth, weekOrMonth: value as number };
+      localStorage.setItem('savedWeekOrMonth', `${updatedValue.weekOrMonth} ${updatedValue.year}`);
     } else {
       updatedValue = {
         ...currentWeekOrMonth,
         weekOrMonth: getMonthNumber(value as string) as number,
       };
+      localStorage.setItem('savedWeekOrMonth', `${updatedValue.weekOrMonth} ${updatedValue.year}`);
     }
     setCurrentWeekOrMonth(updatedValue);
   };
@@ -70,9 +74,16 @@ export const Current = ({
         type="number"
         placeholder="Select Year..."
         value={currentWeekOrMonth.year}
-        onChange={(event) =>
-          setCurrentWeekOrMonth({ ...currentWeekOrMonth, year: Number(event.target.value) })
-        }
+        onChange={(event) => {
+          localStorage.setItem(
+            'savedWeekOrMonth',
+            `${currentWeekOrMonth.weekOrMonth} ${Number(event.target.value)}`
+          );
+          setCurrentWeekOrMonth({
+            weekOrMonth: currentWeekOrMonth.weekOrMonth,
+            year: Number(event.target.value),
+          });
+        }}
       />
     </Wrapper>
   );

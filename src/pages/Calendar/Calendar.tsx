@@ -25,7 +25,6 @@ export default function Calendar(): JSX.Element {
     INITIAL_CURRENT_WEEK_OR_MONTH
   );
   const [weekOrMonth, setWeekOrMonth] = useState<string>(INITIAL_WEEK_OR_MONTH);
-
   const dispatch: AppDispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
 
@@ -38,30 +37,32 @@ export default function Calendar(): JSX.Element {
     );
   }, [dispatch]);
 
-  useEffect(() => {
-    localStorage.setItem(
-      'savedWeekOrMonth',
-      `${currentWeekOrMonth.weekOrMonth} ${currentWeekOrMonth.year}`
-    );
-    localStorage.setItem('weekOrMonth', `${weekOrMonth.toLowerCase()}`);
-  }, [currentWeekOrMonth, weekOrMonth]);
-
   function setPrevItem() {
     if (localStorage.getItem('weekOrMonth') === 'month') {
       if (currentWeekOrMonth.weekOrMonth === 1) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 12 }));
+        localStorage.setItem('savedWeekOrMonth', `12 ${currentWeekOrMonth.year - 1}`);
 
         return;
       } else {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year, weekOrMonth: prev.weekOrMonth - 1 }));
+        localStorage.setItem(
+          'savedWeekOrMonth',
+          `${currentWeekOrMonth.weekOrMonth - 1} ${currentWeekOrMonth.year}`
+        );
       }
     } else if (localStorage.getItem('weekOrMonth') === 'week') {
       if (currentWeekOrMonth.weekOrMonth === 1) {
-        setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 53 }));
+        setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 52 }));
+        localStorage.setItem('savedWeekOrMonth', `52 ${currentWeekOrMonth.year - 1}`);
 
         return;
       } else {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year, weekOrMonth: prev.weekOrMonth - 1 }));
+        localStorage.setItem(
+          'savedWeekOrMonth',
+          `${currentWeekOrMonth.weekOrMonth - 1} ${currentWeekOrMonth.year}`
+        );
       }
     }
   }
@@ -70,39 +71,51 @@ export default function Calendar(): JSX.Element {
     if (localStorage.getItem('weekOrMonth') === 'month') {
       if (currentWeekOrMonth.weekOrMonth === 12) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year + 1, weekOrMonth: 1 }));
+        localStorage.setItem('savedWeekOrMonth', `1 ${currentWeekOrMonth.year + 1}`);
 
         return;
       } else {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year, weekOrMonth: prev.weekOrMonth + 1 }));
+        localStorage.setItem(
+          'savedWeekOrMonth',
+          `${currentWeekOrMonth.weekOrMonth + 1} ${currentWeekOrMonth.year}`
+        );
       }
     } else if (localStorage.getItem('weekOrMonth') === 'week') {
-      if (currentWeekOrMonth.weekOrMonth === 53) {
+      if (currentWeekOrMonth.weekOrMonth === 52) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year + 1, weekOrMonth: 1 }));
+        localStorage.setItem('savedWeekOrMonth', `1 ${currentWeekOrMonth.year + 1}`);
 
         return;
       } else {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year, weekOrMonth: prev.weekOrMonth + 1 }));
+        localStorage.setItem(
+          'savedWeekOrMonth',
+          `${currentWeekOrMonth.weekOrMonth + 1} ${currentWeekOrMonth.year}`
+        );
       }
     }
   }
 
-  useEffect(() => {
-    if (weekOrMonth.toLowerCase() === 'month') {
+  function changeCurrentWeekOrMonth(value: string): void {
+    if (value === 'month') {
       const monthForWeek = calculateMonthForWeek(
         currentWeekOrMonth.year,
         currentWeekOrMonth.weekOrMonth
       );
 
-      setCurrentWeekOrMonth({ ...currentWeekOrMonth, weekOrMonth: monthForWeek });
+      setCurrentWeekOrMonth((prev) => ({ year: prev.year, weekOrMonth: monthForWeek }));
+      localStorage.setItem('savedWeekOrMonth', `${monthForWeek} ${currentWeekOrMonth.year}`);
     } else {
       const firstWeekOfMonth = calculateWeekOfYear(
         currentWeekOrMonth.year,
         currentWeekOrMonth.weekOrMonth
       );
 
-      setCurrentWeekOrMonth({ ...currentWeekOrMonth, weekOrMonth: firstWeekOfMonth });
+      setCurrentWeekOrMonth((prev) => ({ year: prev.year, weekOrMonth: firstWeekOfMonth }));
+      localStorage.setItem('savedWeekOrMonth', `${firstWeekOfMonth} ${currentWeekOrMonth.year}`);
     }
-  }, [weekOrMonth]);
+  }
 
   const calculateMonthForWeek = (year: number, week: number): number => {
     const firstDayOfYear = new Date(year, 0, 1);
@@ -154,6 +167,7 @@ export default function Calendar(): JSX.Element {
         setWeekOrMonth={(value) => setWeekOrMonth(value)}
         setPrevItem={setPrevItem}
         setNextItem={setNextItem}
+        changeCurrentWeekOrMonth={changeCurrentWeekOrMonth}
       />
       <CalendarGrid />
       <Loading isVisible={isLoading} />

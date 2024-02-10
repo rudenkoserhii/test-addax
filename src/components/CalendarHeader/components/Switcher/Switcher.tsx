@@ -1,10 +1,17 @@
 import { Button } from 'components/Button/Button';
 import { Wrapper } from 'components/CalendarHeader/components/Switcher/Switcher.styled';
 
-export const Switcher = ({ setWeekOrMonth }: { setWeekOrMonth: (value: string) => void }) => {
+export const Switcher = ({
+  setWeekOrMonth,
+  changeCurrentWeekOrMonth,
+}: {
+  setWeekOrMonth: (value: string) => void;
+  changeCurrentWeekOrMonth: (value: string) => void;
+}) => {
   function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     localStorage.setItem('weekOrMonth', event.currentTarget.innerText.toLowerCase() || 'month');
     setWeekOrMonth(event.currentTarget.innerText);
+    changeCurrentWeekOrMonth(event.currentTarget.innerText.toLowerCase());
   }
 
   return (

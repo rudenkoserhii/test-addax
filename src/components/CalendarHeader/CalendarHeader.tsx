@@ -10,6 +10,7 @@ export const CalendarHeader = ({
   setWeekOrMonth,
   currentWeekOrMonth,
   setCurrentWeekOrMonth,
+  changeCurrentWeekOrMonth,
 }: {
   setPrevItem: () => void;
   setNextItem: () => void;
@@ -18,6 +19,7 @@ export const CalendarHeader = ({
 
   currentWeekOrMonth: WeekOrMonth;
   setCurrentWeekOrMonth: ({ year, weekOrMonth }: WeekOrMonth) => void;
+  changeCurrentWeekOrMonth: (value: string) => void;
 }) => (
   <Wrapper>
     <UpDown setPrevItem={setPrevItem} setNextItem={setNextItem} weekOrMonth={weekOrMonth} />
@@ -29,6 +31,6 @@ export const CalendarHeader = ({
     />
     <Download />
     <Import />
-    <Switcher setWeekOrMonth={setWeekOrMonth} />
+    <Switcher setWeekOrMonth={setWeekOrMonth} changeCurrentWeekOrMonth={changeCurrentWeekOrMonth} />
   </Wrapper>
 );
