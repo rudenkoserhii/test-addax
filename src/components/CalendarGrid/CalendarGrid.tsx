@@ -99,7 +99,6 @@ export const CalendarGrid = (): JSX.Element => {
   const [tasks, setTasks] = useState<Task[]>(data);
 
   const holidays = useSelector(selectAllHolidays);
-  console.log(holidays.map((holiday) => holiday.date.replaceAll('-', '.')));
   const handleTaskUpdate = (updatedTasks: Task[]) => {
     setTasks((prevTasks) =>
       prevTasks.map((prevTask) => {

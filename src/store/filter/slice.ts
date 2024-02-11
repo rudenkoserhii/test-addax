@@ -2,12 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const filterSlice = createSlice({
   name: 'filter',
-  initialState: {value: ""},
+  initialState: { value: '', color: '' },
   reducers: {
     addFilter(state, action) {
-      state.value = action.payload.toLowerCase()
+      state.value = action.payload.toLowerCase();
+    },
+    addColor(state, action) {
+      state.color = action.payload.toLowerCase();
     },
   },
 });
 
-export const { addFilter } = filterSlice.actions;
+export const { addFilter, addColor } = filterSlice.actions;
