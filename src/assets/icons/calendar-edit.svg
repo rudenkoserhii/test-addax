@@ -5,6 +5,7 @@
    <path fill="#0F0F0F" fill-rule="evenodd"
       d="M24 18a6 6 0 1 1-12 0 6 6 0 0 1 12 0Zm-10.018 0a4.018 4.018 0 1 0 8.036 0 4.018 4.018 0 0 0-8.036 0Z"
       clip-rule="evenodd" />
-   <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.008"
+   <path fill="#0F0F0F" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+      stroke-width="1.008"
       d="m16.215 19.816 1.02-.203c.09-.018.134-.027.176-.043a.502.502 0 0 0 .104-.056c.037-.025.07-.057.133-.122l2.099-2.094a.713.713 0 0 0-1.008-1.01l-2.098 2.095c-.064.064-.097.096-.122.133a.503.503 0 0 0-.056.104c-.016.041-.025.086-.043.175z" />
 </svg>

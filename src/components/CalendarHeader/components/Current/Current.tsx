@@ -4,6 +4,7 @@ import {
   InputYear,
   Select,
   Text,
+  Option,
 } from 'components/CalendarHeader/components/Current/Current.styled';
 import { monthNames } from 'enums';
 import { WeekOrMonth } from 'types';
@@ -20,8 +21,6 @@ export const Current = ({
   weekOrMonth,
 }: CurrentProp) => {
   const isWeek = weekOrMonth.toLowerCase() === 'week';
-  console.log(weekOrMonth);
-  console.log(currentWeekOrMonth);
   const getMonthNumber = (monthName: string): number => monthNames.indexOf(monthName) + 1;
 
   const handleInputChange = (value: number | string) => {
@@ -43,9 +42,9 @@ export const Current = ({
 
   const renderMonthOptions = () =>
     monthNames.map((month, index) => (
-      <option key={index} value={month}>
+      <Option key={index} value={month}>
         {month}
-      </option>
+      </Option>
     ));
 
   return (
@@ -53,6 +52,7 @@ export const Current = ({
       {isWeek ? (
         <>
           <InputWeek
+            title="Select Week"
             type="number"
             placeholder="Select Week..."
             min={1}
@@ -64,6 +64,7 @@ export const Current = ({
         </>
       ) : (
         <Select
+          title="Select Month"
           value={monthNames[currentWeekOrMonth.weekOrMonth - 1]}
           onChange={(event) => handleInputChange(event.target.value)}
         >
@@ -71,6 +72,7 @@ export const Current = ({
         </Select>
       )}
       <InputYear
+        title="Select Year"
         type="number"
         placeholder="Select Year..."
         value={currentWeekOrMonth.year}

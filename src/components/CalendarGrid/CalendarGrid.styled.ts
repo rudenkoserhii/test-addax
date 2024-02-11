@@ -30,7 +30,7 @@ export const Cell = styled.td`
   padding: ${(p) => p.theme.space[3]}px;
   text-align: center;
 
-  &.empty-day {
+  &.empty-day > div {
     opacity: 0.3;
   }
 `;

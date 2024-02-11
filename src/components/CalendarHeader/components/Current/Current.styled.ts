@@ -83,3 +83,7 @@ export const Select = styled.select`
     outline: 1px solid ${(p) => p.theme.colors.lightblue};
   }
 `;
+
+export const Option = styled.option`
+  font-size: ${(p) => p.theme.fontSizes.s};
+`;

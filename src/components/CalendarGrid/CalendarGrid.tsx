@@ -12,8 +12,98 @@ import { DateCell } from 'components/DateCell/DateCell';
 import { nanoid } from 'nanoid';
 import { Task } from 'types';
 
+const data: Task[] = [
+  {
+    id: '1',
+    date: '2024.02.11',
+    title: 'First',
+    content: 'First first',
+    label: [
+      {
+        id: '11',
+        color: 'red',
+        text: 'First label text',
+        order: 0,
+      },
+    ],
+    order: 0,
+  },
+  {
+    id: '2',
+    date: '2024.02.12',
+    title: 'Second',
+    content: 'Second second',
+    label: [
+      {
+        id: '11',
+        color: 'green',
+        text: 'First label text',
+        order: 0,
+      },
+    ],
+    order: 0,
+  },
+  {
+    id: '3',
+    date: '2024.02.12',
+    title: 'Third',
+    content: 'Second second',
+    label: [
+      {
+        id: '11',
+        color: 'yellow',
+        text: 'First label text',
+        order: 0,
+      },
+      {
+        id: '12',
+        color: 'brown',
+        text: 'Second label text',
+        order: 1,
+      },
+      {
+        id: '13',
+        color: 'blue',
+        text: 'Third label text',
+        order: 2,
+      },
+      {
+        id: '14',
+        color: 'pink',
+        text: 'Fourth label text',
+        order: 3,
+      },
+      {
+        id: '15',
+        color: 'orangered',
+        text: 'Fifth label text',
+        order: 4,
+      },
+      {
+        id: '16',
+        color: 'orange',
+        text: 'Sixth label text',
+        order: 5,
+      },
+    ],
+    order: 1,
+  },
+];
+
 export const CalendarGrid = (): JSX.Element => {
   const [calendarData, setCalendarData] = useState<string[][]>([]);
+  const [tasks, setTasks] = useState<Task[]>(data);
+
+  const handleTaskUpdate = (updatedTasks: Task[]) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((prevTask) => {
+        const updatedTask = updatedTasks.find((task) => task.id === prevTask.id);
+
+        return updatedTask || prevTask;
+      })
+    );
+  };
+
   const savedWeekOrMonth =
     localStorage.getItem('savedWeekOrMonth') ||
     `${new Date().getMonth() + 1} ${new Date().getFullYear()}`;
@@ -34,7 +124,13 @@ export const CalendarGrid = (): JSX.Element => {
   };
 
   const renderWeekView = (week: number, year: number) => {
-    const currentDate = new Date(year, 0, 1 + (week - 1) * 7);
+    const firstDayOfYear = new Date(year, 0, 0).getDay();
+    const firstDayOfPrevYear = new Date(year - 1, 0, 0).getDay();
+
+    const currentDate =
+      week === 1
+        ? new Date(year - 1, 0, 7 - firstDayOfPrevYear + 52 * 7)
+        : new Date(year, 0, 7 - firstDayOfYear + (week - 1) * 7);
     const weekArray: string[] = [];
 
     for (let i = 0; i < 7; i++) {
@@ -82,39 +178,6 @@ export const CalendarGrid = (): JSX.Element => {
     setCalendarData(calendarArray);
   };
 
-  const data: Task[] = [
-    {
-      id: '1',
-      date: '2024.02.11',
-      title: 'first',
-      content: 'first first',
-      label: [
-        {
-          id: '11',
-          color: 'red',
-          text: 'first label text',
-          order: 0,
-        },
-      ],
-      order: 0,
-    },
-    {
-      id: '2',
-      date: '2024.02.12',
-      title: 'second',
-      content: 'second second',
-      label: [
-        {
-          id: '11',
-          color: 'green',
-          text: 'first label text',
-          order: 0,
-        },
-      ],
-      order: 0,
-    },
-  ];
-
   return (
     <Wrapper className="calendar-container" id="screenshot">
       <Table>
@@ -140,7 +203,7 @@ export const CalendarGrid = (): JSX.Element => {
                   <DateCell
                     day={day}
                     tasks={
-                      data?.filter(
+                      tasks?.filter(
                         (item) =>
                           item.date ===
                           getCurrentDate(
@@ -149,8 +212,11 @@ export const CalendarGrid = (): JSX.Element => {
                             day,
                             weekOrMonthType
                           )
-                      ) || ''
+                      ) || []
                     }
+                    onTaskUpdate={handleTaskUpdate}
+                    savedWeekOrMonth={savedWeekOrMonth}
+                    weekOrMonthType={weekOrMonthType}
                   />
                 </Cell>
               ))}

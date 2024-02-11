@@ -6,43 +6,130 @@ import {
   Tasks,
   TaskContainer,
   LabelsContainer,
-  LabelContainer,
+  ButtonContainer,
   LabelColor,
   LabelText,
   TaskTitle,
   TaskContent,
+  IconNewTaskStyled,
+  Button,
+  IconEditTaskStyled,
+  IconDeleteTaskStyled,
+  TitleContainer,
 } from 'components/DateCell/DateCell.styled';
 import { nanoid } from 'nanoid';
 import { Task } from 'types';
+import { getCurrentDate } from 'utils';
 
-export const DateCell = ({ day, tasks }: { day: string; tasks: Task[] }): JSX.Element => {
-  console.log(tasks);
+export const DateCell = ({
+  day,
+  tasks,
+  onTaskUpdate,
+  savedWeekOrMonth,
+  weekOrMonthType,
+}: {
+  day: string;
+  tasks: Task[];
+  onTaskUpdate: Function;
+  savedWeekOrMonth: string;
+  weekOrMonthType: string;
+}): JSX.Element => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, task: Task) => {
+    e.dataTransfer.setData('text/plain', JSON.stringify(task));
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData('text/plain');
+
+    if (data) {
+      const draggedTask = JSON.parse(data);
+      let updatedTasks = [...tasks];
+      const draggedIndex = tasks.findIndex((task) => task.id === draggedTask.id);
+
+      if (day === draggedTask.date.split('.')[2]) {
+        const dropTaskElement = e.target as HTMLElement;
+        const dropTaskOrder = Number(dropTaskElement.dataset.set);
+
+        if (dropTaskOrder || dropTaskOrder === 0) {
+          updatedTasks = updatedTasks.map((task) => {
+            if (task.id === draggedTask.id) {
+              return { ...task, order: dropTaskOrder };
+            } else if (draggedTask.order > dropTaskOrder && task.order >= dropTaskOrder) {
+              return { ...task, order: task.order + 1 };
+            } else if (draggedTask.order < dropTaskOrder && task.order <= dropTaskOrder) {
+              return { ...task, order: task.order - 1 };
+            }
+
+            return task;
+          });
+        }
+      } else {
+        updatedTasks.splice(draggedIndex, 1);
+
+        draggedTask.date = getCurrentDate(
+          Number(savedWeekOrMonth.split(' ')[1]),
+          Number(savedWeekOrMonth.split(' ')[0]),
+          day,
+          weekOrMonthType
+        );
+
+        draggedTask.order = tasks.length;
+
+        updatedTasks.push(draggedTask);
+      }
+
+      onTaskUpdate(updatedTasks);
+    }
+  };
 
   return (
-    <Wrapper>
+    <Wrapper onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
       <DateBox>
         <DayStyled>{day}</DayStyled>
         {tasks && tasks.length > 0 && <Title>{`${tasks.length} cards`}</Title>}
+        <Button type="button" onClick={() => console.log('add new')} title="Add the new Task">
+          <IconNewTaskStyled />
+        </Button>
       </DateBox>
       <Tasks>
         {tasks
           .sort((a, b) => a.order - b.order)
           .map((task) => (
-            <TaskContainer key={nanoid()}>
+            <TaskContainer
+              key={nanoid()}
+              draggable
+              onDragStart={(e) => handleDragStart(e, task)}
+              data-set={task.order}
+            >
               {task.label && task.label?.length > 0 && (
-                <LabelsContainer>
+                <LabelsContainer data-set={task.order}>
                   {task.label
                     .sort((a, b) => a.order - b.order)
                     .map((item) => (
-                      <LabelContainer>
-                        <LabelColor>{item.color}</LabelColor>
-                        <LabelText>{item.text}</LabelText>
-                      </LabelContainer>
+                      <LabelColor key={nanoid()} data-color={item.color} data-set={task.order}>
+                        <LabelText data-set={task.order}>{item.text}</LabelText>
+                      </LabelColor>
                     ))}
                 </LabelsContainer>
               )}
-              {task.title && <TaskTitle>{task.title}</TaskTitle>}
-              {task.content && <TaskContent>{task.content}</TaskContent>}
+              {task.title && (
+                <TitleContainer data-set={task.order}>
+                  <ButtonContainer className="buttons-container" data-set={task.order}>
+                    <Button type="button" onClick={() => console.log('edit')} title="Edit the Task">
+                      <IconEditTaskStyled />
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => console.log('delete')}
+                      title="Delete the Task"
+                    >
+                      <IconDeleteTaskStyled />
+                    </Button>
+                  </ButtonContainer>
+                  <TaskTitle data-set={task.order}>{task.title}</TaskTitle>
+                </TitleContainer>
+              )}
+              {task.content && <TaskContent data-set={task.order}>{task.content}</TaskContent>}
             </TaskContainer>
           ))}
       </Tasks>

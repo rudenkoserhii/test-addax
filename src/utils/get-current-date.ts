@@ -10,13 +10,17 @@ export const getCurrentDate = (
   if (weekOrMonthType === 'month') {
     return `${year}.${formattedMonth}.${formattedDay}`;
   } else if (weekOrMonthType === 'week') {
-    const firstDayOfWeek = 1 + (weekOrMonth - 1) * 7;
-    const date = new Date(year, 0, firstDayOfWeek + Number(day) - 1);
+    const firstDayOfYear = new Date(year, 0, 0).getDay();
+    const firstDayOfPrevYear = new Date(year - 1, 0, 0).getDay();
+
+    const date =
+      weekOrMonth === 1
+        ? new Date(year - 1, 0, 7 - firstDayOfPrevYear + 52 * 7)
+        : new Date(year, 0, 7 - firstDayOfYear + (weekOrMonth - 1) * 7);
 
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const dayOfMonth = String(date.getDate()).padStart(2, '0');
 
-    return `${year}.${month}.${dayOfMonth}`;
+    return `${year}.${month}.${formattedDay}`;
   }
 
   return `${year}.${formattedMonth}.${formattedDay}`;

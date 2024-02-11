@@ -8,6 +8,7 @@ export const theme = {
     green: 'green',
     lightgray: 'lightgray',
     blue: 'blue',
+    lightgrey: '#f2f2f2',
   },
   space: [0, 2, 4, 8, 16, 32, 64, 128, 256, 24, 52, 160, 188],
   fonts: {
