@@ -16,9 +16,11 @@ import {
   IconEditTaskStyled,
   IconDeleteTaskStyled,
   TitleContainer,
+  Holidays,
+  HolidayTitle,
 } from 'components/DateCell/DateCell.styled';
 import { nanoid } from 'nanoid';
-import { Task } from 'types';
+import { Holiday, Task } from 'types';
 import { getCurrentDate } from 'utils';
 
 export const DateCell = ({
@@ -27,12 +29,14 @@ export const DateCell = ({
   onTaskUpdate,
   savedWeekOrMonth,
   weekOrMonthType,
+  holidays,
 }: {
   day: string;
   tasks: Task[];
   onTaskUpdate: Function;
   savedWeekOrMonth: string;
   weekOrMonthType: string;
+  holidays: Holiday[];
 }): JSX.Element => {
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, task: Task) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(task));
@@ -91,6 +95,13 @@ export const DateCell = ({
           <IconNewTaskStyled />
         </Button>
       </DateBox>
+      {holidays && holidays.length > 0 && (
+        <Holidays>
+          {holidays.map((holiday) => (
+            <HolidayTitle key={nanoid()}>{holiday.name}</HolidayTitle>
+          ))}
+        </Holidays>
+      )}
       <Tasks>
         {tasks
           .sort((a, b) => a.order - b.order)

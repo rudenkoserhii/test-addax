@@ -3,13 +3,18 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from 'store/store';
 import { AsyncThunkConfig, GetThunkAPI } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
-axios.defaults.baseURL = 'https://connections-api.herokuapp.com/';
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
 const setAuthHeader = (token: string) => {
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
 
-type CredentialsType = { name?: string | null; email?: string | null; password?: string | null };
+type CredentialsType = {
+  name?: string | null;
+  email?: string | null;
+  password?: string | null;
+  country?: string | null;
+};
 
 const clearAuthHeader = () => {
   axios.defaults.headers.common.Authorization = '';

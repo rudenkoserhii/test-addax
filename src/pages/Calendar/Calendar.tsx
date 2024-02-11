@@ -8,6 +8,8 @@ import { AppDispatch } from 'store/store';
 import { CalendarHeader } from 'components/CalendarHeader/CalendarHeader';
 import { Loading } from 'components/Loading/Loading';
 import { WeekOrMonth } from 'types';
+import { getHolidays } from 'store/holidays/operations';
+import { useAuth } from 'hooks';
 
 export default function Calendar(): JSX.Element {
   const INITIAL_WEEK_OR_MONTH: string = localStorage.getItem('weekOrMonth')
@@ -27,6 +29,9 @@ export default function Calendar(): JSX.Element {
   const [weekOrMonth, setWeekOrMonth] = useState<string>(INITIAL_WEEK_OR_MONTH);
   const dispatch: AppDispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
+  const { user } = useAuth();
+  // const { country } = user;
+  const country = 'UA';
 
   useEffect(() => {
     dispatch(
@@ -35,6 +40,15 @@ export default function Calendar(): JSX.Element {
         weekOrMonthName: localStorage.getItem('weekOrMonth') || 'month',
       })
     );
+    if (country)
+      dispatch(
+        getHolidays({
+          year:
+            localStorage.getItem('savedWeekOrMonth')?.split(' ')[1] ||
+            String(new Date().getFullYear()),
+          countryCode: country,
+        })
+      );
   }, [dispatch]);
 
   function setPrevItem() {

@@ -3,8 +3,10 @@ import { AsyncThunkConfig, GetThunkAPI } from '@reduxjs/toolkit/dist/createAsync
 import axios, { AxiosError } from 'axios';
 import { Task, WeekOrMonthRequest } from 'types';
 
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+
 export const getTasks = createAsyncThunk(
-  'calendar/getTasks',
+  'getTasks',
   async (objectWeekOrMonth: WeekOrMonthRequest, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.get('/calendar', { data: objectWeekOrMonth });
@@ -17,7 +19,7 @@ export const getTasks = createAsyncThunk(
 );
 
 export const addTask = createAsyncThunk(
-  'calendar/addTask',
+  'addTask',
   async (objTask: Task, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.post('/calendar', objTask);
@@ -30,7 +32,7 @@ export const addTask = createAsyncThunk(
 );
 
 export const deleteTask = createAsyncThunk(
-  'calendar/deleteTask',
+  'deleteTask',
   async (taskId: string, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.delete(`/calendar/${taskId}`);
@@ -43,7 +45,7 @@ export const deleteTask = createAsyncThunk(
 );
 
 export const editTask = createAsyncThunk(
-  'calendar/editTask',
+  'editTask',
   async (objTask: Task, thunkAPI: GetThunkAPI<AsyncThunkConfig>) => {
     try {
       const response = await axios.patch(`/calendar/${objTask.id}`, objTask);

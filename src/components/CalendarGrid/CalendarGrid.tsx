@@ -11,6 +11,9 @@ import {
 import { DateCell } from 'components/DateCell/DateCell';
 import { nanoid } from 'nanoid';
 import { Task } from 'types';
+import { useSelector } from 'react-redux';
+import { selectAllTasks } from 'store/tasks/selectors';
+import { selectAllHolidays } from 'store/holidays/selectors';
 
 const data: Task[] = [
   {
@@ -92,8 +95,11 @@ const data: Task[] = [
 
 export const CalendarGrid = (): JSX.Element => {
   const [calendarData, setCalendarData] = useState<string[][]>([]);
+  // const [tasks, setTasks] = useState<Task[]>(useSelector(selectAllTasks));
   const [tasks, setTasks] = useState<Task[]>(data);
 
+  const holidays = useSelector(selectAllHolidays);
+  console.log(holidays.map((holiday) => holiday.date.replaceAll('-', '.')));
   const handleTaskUpdate = (updatedTasks: Task[]) => {
     setTasks((prevTasks) =>
       prevTasks.map((prevTask) => {
@@ -217,6 +223,18 @@ export const CalendarGrid = (): JSX.Element => {
                     onTaskUpdate={handleTaskUpdate}
                     savedWeekOrMonth={savedWeekOrMonth}
                     weekOrMonthType={weekOrMonthType}
+                    holidays={
+                      holidays?.filter(
+                        (holiday) =>
+                          holiday.date.replaceAll('-', '.') ===
+                          getCurrentDate(
+                            Number(savedWeekOrMonth.split(' ')[1]),
+                            Number(savedWeekOrMonth.split(' ')[0]),
+                            day,
+                            weekOrMonthType
+                          )
+                      ) || []
+                    }
                   />
                 </Cell>
               ))}

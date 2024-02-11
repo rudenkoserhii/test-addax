@@ -1,21 +1,27 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { logIn } from 'store/auth/operations';
+import { signUp } from 'store/auth/operations';
 import {
   FormStyled,
   LabelStyled,
   InputStyled,
   ButtonStyled,
-} from 'components/LogInForm/LogInForm.styled';
+  SelectStyled,
+} from './SignUpForm.styled';
 import { AppDispatch } from 'store/store';
 import { FormEvent, useEffect } from 'react';
 import { FormElements } from 'types';
 import { getCountries } from 'store/holidays/operations';
+import { selectAllCountries, selectLoading } from 'store/holidays/selectors';
 import { Loading } from 'components/Loading/Loading';
 import { selectIsLoading } from 'store/auth/selectors';
+import { nanoid } from 'nanoid';
 
-export const LogInForm = () => {
+export const SignUpForm = (): JSX.Element => {
   const dispatch: AppDispatch = useDispatch();
-  const isLoadingWithLogIn = useSelector(selectIsLoading);
+
+  const isLoadingWithCountries = useSelector(selectLoading);
+  const isLoadingWithSignUp = useSelector(selectIsLoading);
+  const countries = useSelector(selectAllCountries);
 
   useEffect(() => {
     dispatch(getCountries());
@@ -27,9 +33,11 @@ export const LogInForm = () => {
     const formElements = form.elements as FormElements;
 
     dispatch(
-      logIn({
+      signUp({
+        name: formElements?.name?.value,
         email: formElements?.email?.value,
         password: formElements?.password?.value,
+        country: formElements?.country?.value,
       })
     );
     form.reset();
@@ -38,6 +46,10 @@ export const LogInForm = () => {
   return (
     <FormStyled onSubmit={handleSubmit} autoComplete="off">
       <LabelStyled>
+        Username
+        <InputStyled type="text" name="name" />
+      </LabelStyled>
+      <LabelStyled>
         Email
         <InputStyled type="email" name="email" />
       </LabelStyled>
@@ -45,8 +57,17 @@ export const LogInForm = () => {
         Password
         <InputStyled type="password" name="password" />
       </LabelStyled>
-      <ButtonStyled type="submit">Log In</ButtonStyled>
-      <Loading isVisible={isLoadingWithLogIn} />
+      <LabelStyled>
+        <SelectStyled name="country">
+          {countries.map((country) => (
+            <option key={nanoid()} value={country.countryCode}>
+              {country.name}
+            </option>
+          ))}
+        </SelectStyled>
+      </LabelStyled>
+      <ButtonStyled type="submit">Sign Up</ButtonStyled>
+      <Loading isVisible={isLoadingWithCountries || isLoadingWithSignUp} />
     </FormStyled>
   );
 };

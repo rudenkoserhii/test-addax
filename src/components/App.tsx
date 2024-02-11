@@ -9,8 +9,8 @@ import { useAuth } from 'hooks';
 import { AppDispatch } from 'store/store';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
-const RegisterPage = lazy(() => import('pages/Register/Register'));
-const LoginPage = lazy(() => import('pages/Login/Login'));
+const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
+const LogInPage = lazy(() => import('pages/LogIn/LogIn'));
 const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
 export const App = () => {
@@ -29,12 +29,12 @@ export const App = () => {
         <Route index element={<HomePage />} />
         <Route path="*" element={<HomePage />} />
         <Route
-          path="/register"
-          element={<RestrictedRoute redirectTo="/calendar" component={<RegisterPage />} />}
+          path="/signup"
+          element={<RestrictedRoute redirectTo="/calendar" component={<SignUpPage />} />}
         />
         <Route
           path="/login"
-          element={<RestrictedRoute redirectTo="/calendar" component={<LoginPage />} />}
+          element={<RestrictedRoute redirectTo="/calendar" component={<LogInPage />} />}
         />
         {/* <Route
           path="/calendar"

@@ -149,3 +149,22 @@ export const TaskTitle = styled.p`
 export const TaskContent = styled.p`
   font-size: ${(p) => p.theme.fontSizes.xs};
 `;
+
+export const HolidayTitle = styled.p`
+  text-align: left;
+  font-weight: ${(p) => p.theme.fontWeights.bold};
+  font-size: ${(p) => p.theme.fontSizes.s};
+  color: ${(p) => p.theme.colors.red};
+
+  &:not(:last-child) {
+    margin-bottom: ${(p) => p.theme.space[2]}px;
+  }
+`;
+
+export const Holidays = styled.div`
+  text-align: left;
+  padding: ${(p) => p.theme.space[2]}px;
+  border-radius: ${(p) => p.theme.radii.normal};
+
+  background-color: ${(p) => p.theme.colors.lightgrey};
+`;

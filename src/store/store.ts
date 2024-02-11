@@ -12,6 +12,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { tasksReducer } from 'store/tasks/slice';
+import { holidaysReducer } from 'store/holidays/slice';
 import { filterSlice } from 'store/filter/slice';
 import { StateAuth, authReducer } from 'store/auth/slice';
 
@@ -27,6 +28,7 @@ export const store = configureStore({
   reducer: {
     auth: persistReducer<StateAuth, UnknownAction>(authPersistConfig, authReducer),
     tasks: tasksReducer,
+    holidays: holidaysReducer,
     filter: filterSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
