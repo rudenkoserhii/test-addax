@@ -56,6 +56,14 @@ export default function Calendar(): JSX.Element {
       if (currentWeekOrMonth.weekOrMonth === 1) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 12 }));
         localStorage.setItem('savedWeekOrMonth', `12 ${currentWeekOrMonth.year - 1}`);
+        if (country) {
+          dispatch(
+            getHolidays({
+              year: String(currentWeekOrMonth.year - 1),
+              countryCode: country,
+            })
+          );
+        }
 
         return;
       } else {
@@ -69,6 +77,14 @@ export default function Calendar(): JSX.Element {
       if (currentWeekOrMonth.weekOrMonth === 1) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 52 }));
         localStorage.setItem('savedWeekOrMonth', `52 ${currentWeekOrMonth.year - 1}`);
+        if (country) {
+          dispatch(
+            getHolidays({
+              year: String(currentWeekOrMonth.year - 1),
+              countryCode: country,
+            })
+          );
+        }
 
         return;
       } else {
@@ -86,6 +102,14 @@ export default function Calendar(): JSX.Element {
       if (currentWeekOrMonth.weekOrMonth === 12) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year + 1, weekOrMonth: 1 }));
         localStorage.setItem('savedWeekOrMonth', `1 ${currentWeekOrMonth.year + 1}`);
+        if (country) {
+          dispatch(
+            getHolidays({
+              year: String(currentWeekOrMonth.year + 1),
+              countryCode: country,
+            })
+          );
+        }
 
         return;
       } else {
@@ -99,6 +123,14 @@ export default function Calendar(): JSX.Element {
       if (currentWeekOrMonth.weekOrMonth === 52) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year + 1, weekOrMonth: 1 }));
         localStorage.setItem('savedWeekOrMonth', `1 ${currentWeekOrMonth.year + 1}`);
+        if (country) {
+          dispatch(
+            getHolidays({
+              year: String(currentWeekOrMonth.year + 1),
+              countryCode: country,
+            })
+          );
+        }
 
         return;
       } else {

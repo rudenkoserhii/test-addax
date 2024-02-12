@@ -6,7 +6,13 @@ import {
   Text,
   Option,
 } from 'components/CalendarHeader/components/Current/Current.styled';
+import { Loading } from 'components/Loading/Loading';
 import { monthNames } from 'enums';
+import { useAuth } from 'hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { getHolidays } from 'store/holidays/operations';
+import { selectLoading } from 'store/holidays/selectors';
+import { AppDispatch } from 'store/store';
 import { WeekOrMonth } from 'types';
 
 type CurrentProp = {
@@ -20,11 +26,16 @@ export const Current = ({
   setCurrentWeekOrMonth,
   weekOrMonth,
 }: CurrentProp) => {
+  const dispatch: AppDispatch = useDispatch();
+  const isLoading = useSelector(selectLoading);
+  const { user } = useAuth();
+  // const { country } = user;
+  const country = 'UA';
+
   const isWeek = weekOrMonth.toLowerCase() === 'week';
   const getMonthNumber = (monthName: string): number => monthNames.indexOf(monthName) + 1;
 
   const handleInputChange = (value: number | string) => {
-    console.log('handlechange');
     let updatedValue: WeekOrMonth;
 
     if (isWeek) {
@@ -85,8 +96,17 @@ export const Current = ({
             weekOrMonth: currentWeekOrMonth.weekOrMonth,
             year: Number(event.target.value),
           });
+          if (country) {
+            dispatch(
+              getHolidays({
+                year: event.target.value,
+                countryCode: country,
+              })
+            );
+          }
         }}
       />
+      <Loading isVisible={isLoading} />
     </Wrapper>
   );
 };

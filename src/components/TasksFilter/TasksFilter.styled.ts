@@ -5,6 +5,7 @@ import back from 'assets/images/button_color.png';
 
 export const InputStyled = styled.input`
   height: ${(p) => p.theme.space[10]}px;
+  width: ${(p) => p.theme.space[8]}px;
   padding: ${(p) => p.theme.space[0]}px ${(p) => p.theme.space[10]}px ${(p) => p.theme.space[0]}px
     ${(p) => p.theme.space[3]}px;
   border: 0;
@@ -60,7 +61,10 @@ export const ButtonColor = styled.button`
   height: ${(p) => p.theme.space[5]}px;
   width: ${(p) => p.theme.space[5]}px;
   border-radius: ${(p) => p.theme.radii.normal};
-  position: relative;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: ${(p) => p.theme.space[3]}px;
   transition: all 200ms ease-in;
   &:hover {
     & > form {

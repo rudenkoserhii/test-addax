@@ -20,26 +20,15 @@ export const TasksFilter = (): JSX.Element => {
   const dispatch: AppDispatch = useDispatch();
 
   return (
-    <>
-      <LabelStyled>
-        <InputStyled
-          type="text"
-          name="filter"
-          placeholder="Find tasks by name"
-          onChange={(event) => {
-            dispatch(addFilter(event.currentTarget.value));
-          }}
-        />
-        <Button
-          type="button"
-          onClick={(event) => {
-            console.log((event.currentTarget.parentNode?.children[0] as HTMLInputElement).value);
-            dispatch(addFilter(event.currentTarget.value));
-          }}
-        >
-          <IconSearchStyled />
-        </Button>
-      </LabelStyled>
+    <LabelStyled>
+      <InputStyled
+        type="text"
+        name="filter"
+        placeholder="Find tasks by name or label color"
+        onChange={(event) => {
+          dispatch(addFilter(event.currentTarget.value));
+        }}
+      />
       <ButtonColor type="button" data-color={color}>
         <SelectStyled
           onChange={(event) => {
@@ -78,6 +67,6 @@ export const TasksFilter = (): JSX.Element => {
           ))}
         </SelectStyled>
       </ButtonColor>
-    </>
+    </LabelStyled>
   );
 };
