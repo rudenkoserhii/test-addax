@@ -43,7 +43,7 @@ export const Button = styled.button`
   }
 `;
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ 'data-pointer-events': boolean }>`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -56,6 +56,8 @@ export const Wrapper = styled.div`
   &:hover > div > .buttons {
     visibility: visible;
   }
+
+  pointer-events: ${(p) => (p['data-pointer-events'] ? 'auto' : 'none')};
 `;
 export const Title = styled.p`
   font-size: ${(p) => p.theme.fontSizes.s};

@@ -21,6 +21,7 @@ import {
 } from 'components/DateCell/DateCell.styled';
 import { Loading } from 'components/Loading/Loading';
 import { ModalTask } from 'components/ModalTask/ModalTask';
+import { monthNames } from 'enums';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 import { useState } from 'react';
@@ -33,6 +34,8 @@ import { getCurrentDate } from 'utils';
 
 export const DateCell = ({
   day,
+  month,
+  currentMonth,
   tasks,
   onTaskUpdate,
   onTaskDelete,
@@ -41,6 +44,8 @@ export const DateCell = ({
   holidays,
 }: {
   day: string;
+  month: string;
+  currentMonth: string;
   tasks: Task[];
   onTaskUpdate: (value: Task[]) => void;
   onTaskDelete: (taskId: string) => void;
@@ -126,9 +131,27 @@ export const DateCell = ({
     );
   };
 
+  const isLastOrFirstDayOfMonth = () => {
+    const year = Number(savedWeekOrMonth.split(' ')[1]);
+    const neededMonth = monthNames.findIndex(
+      (monthName) => monthName.slice(0, 3).toLowerCase() === month.toLowerCase()
+    );
+
+    if (day === '1') {
+      return true;
+    }
+
+    return new Date(year, neededMonth + 1, 0).getDate() === Number(day);
+  };
+
   return (
-    <Wrapper onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
+    <Wrapper
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={handleDrop}
+      data-pointer-events={month === currentMonth}
+    >
       <DateBox>
+        {isLastOrFirstDayOfMonth() && <DayStyled>{month}</DayStyled>}
         <DayStyled>{day}</DayStyled>
         {tasks && tasks.length > 0 && <Title>{`${tasks.length} cards`}</Title>}
         <Button

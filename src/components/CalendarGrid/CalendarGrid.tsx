@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { checkDate, getCurrentDate } from 'utils';
-import { colors, days } from 'enums';
+import { colors, days, monthNames } from 'enums';
 import {
   Cell,
   CellTitle,
@@ -104,7 +104,9 @@ export const CalendarGrid = (): JSX.Element => {
   const [calendarData, setCalendarData] = useState<string[][]>([]);
   // const [tasks, setTasks] = useState<Task[]>(useSelector(selectAllTasks));
   const [tasks, setTasks] = useState<Task[]>(data);
-
+  const [currentMonth, setCurrentMonth] = useState<string>(
+    monthNames[new Date().getMonth()].slice(0, 3)
+  );
   const filterByText = useSelector(filterValue);
   const filterByColor = useSelector(filterColor);
 
@@ -157,12 +159,22 @@ export const CalendarGrid = (): JSX.Element => {
         : new Date(year, 0, 7 - firstDayOfYear + (week - 1) * 7);
     const weekArray: string[] = [];
 
+    const monthName = currentDate.toLocaleString('default', {
+      month: 'short',
+    });
+
     for (let i = 0; i < 7; i++) {
-      weekArray.push(currentDate.getDate().toString());
+      const formattedDate = currentDate.toLocaleString('default', {
+        month: 'short',
+        day: 'numeric',
+      });
+
+      weekArray.push(formattedDate);
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
     setCalendarData([weekArray]);
+    setCurrentMonth(monthName.slice(0, 3));
   };
 
   const renderMonthView = (month: number, year: number) => {
@@ -181,17 +193,31 @@ export const CalendarGrid = (): JSX.Element => {
         if (i === 0 && j < firstDayOfMonth) {
           const prevMonthDays =
             firstDayOfMonth > 0
-              ? new Date(year, month - 1, -firstDayOfMonth + 1 + j).getDate()
+              ? new Date(year, month - 1, -firstDayOfMonth + 1 + j).toLocaleString('default', {
+                  month: 'short',
+                  day: 'numeric',
+                })
               : '';
 
-          weekArray.push(prevMonthDays.toString());
+          weekArray.push(prevMonthDays);
         } else if (dayCounter > daysInMonth) {
-          const nextMonthDays = new Date(year, month, dayCounter - daysInMonth).getDate();
+          const nextMonthDays = new Date(year, month, dayCounter - daysInMonth).toLocaleString(
+            'default',
+            {
+              month: 'short',
+              day: 'numeric',
+            }
+          );
 
-          weekArray.push(nextMonthDays.toString());
+          weekArray.push(nextMonthDays);
           dayCounter++;
         } else {
-          weekArray.push(`${dayCounter}`);
+          const currentMonthDays = new Date(year, month - 1, dayCounter).toLocaleString('default', {
+            month: 'short',
+            day: 'numeric',
+          });
+
+          weekArray.push(currentMonthDays);
           dayCounter++;
         }
       }
@@ -200,6 +226,7 @@ export const CalendarGrid = (): JSX.Element => {
     }
 
     setCalendarData(calendarArray);
+    setCurrentMonth(monthNames[month - 1].slice(0, 3));
   };
 
   function checkColor(label: Task['label']): boolean {
@@ -228,17 +255,20 @@ export const CalendarGrid = (): JSX.Element => {
         <tbody>
           {calendarData.map((week, index) => (
             <tr key={index}>
-              {week.map((day) => (
+              {week.map((dayAndMonth) => (
                 <Cell
                   key={nanoid()}
                   className={
-                    checkDate(index, calendarData.length - 1, day) || weekOrMonthType === 'week'
+                    checkDate(index, calendarData.length - 1, dayAndMonth.split(' ')[1]) ||
+                    weekOrMonthType === 'week'
                       ? ''
                       : 'empty-day'
                   }
                 >
                   <DateCell
-                    day={day}
+                    day={dayAndMonth.split(' ')[1]}
+                    month={dayAndMonth.split(' ')[0]}
+                    currentMonth={currentMonth}
                     tasks={
                       tasks?.filter(
                         (item) =>
@@ -246,7 +276,7 @@ export const CalendarGrid = (): JSX.Element => {
                             getCurrentDate(
                               Number(savedWeekOrMonth.split(' ')[1]),
                               Number(savedWeekOrMonth.split(' ')[0]),
-                              day,
+                              dayAndMonth.split(' ')[1],
                               weekOrMonthType
                             ) &&
                           item.title.toLowerCase().includes(filterByText.toLowerCase().trim()) &&
@@ -264,7 +294,7 @@ export const CalendarGrid = (): JSX.Element => {
                           getCurrentDate(
                             Number(savedWeekOrMonth.split(' ')[1]),
                             Number(savedWeekOrMonth.split(' ')[0]),
-                            day,
+                            dayAndMonth.split(' ')[1],
                             weekOrMonthType
                           )
                       ) || []
