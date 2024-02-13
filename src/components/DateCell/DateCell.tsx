@@ -131,6 +131,16 @@ export const DateCell = ({
     );
   };
 
+  const checkTaskOfCurrentMonth =
+    tasks &&
+    tasks.length > 0 &&
+    monthNames[Number(tasks[0]?.date?.split('.')[1]) - 1].slice(0, 3) === month;
+
+  const checkHolidayOfCurrentMonth =
+    holidays &&
+    holidays.length > 0 &&
+    monthNames[Number(holidays[0]?.date?.split('-')[1]) - 1].slice(0, 3) === month;
+
   const isLastOrFirstDayOfMonth = () => {
     const year = Number(savedWeekOrMonth.split(' ')[1]);
     const neededMonth = monthNames.findIndex(
@@ -153,7 +163,9 @@ export const DateCell = ({
       <DateBox>
         {isLastOrFirstDayOfMonth() && <DayStyled>{month}</DayStyled>}
         <DayStyled>{day}</DayStyled>
-        {tasks && tasks.length > 0 && <Title>{`${tasks.length} cards`}</Title>}
+        {tasks && tasks.length > 0 && checkTaskOfCurrentMonth && (
+          <Title>{`${tasks.length} cards`}</Title>
+        )}
         <Button
           className="buttons"
           type="button"
@@ -166,7 +178,7 @@ export const DateCell = ({
           <IconNewTaskStyled />
         </Button>
       </DateBox>
-      {holidays && holidays.length > 0 && (
+      {holidays && holidays.length > 0 && checkHolidayOfCurrentMonth && (
         <Holidays>
           {holidays.map((holiday) => (
             <HolidayTitle key={nanoid()}>{holiday.name}</HolidayTitle>
@@ -174,57 +186,58 @@ export const DateCell = ({
         </Holidays>
       )}
       <Tasks>
-        {tasks
-          .sort((a, b) => a.order - b.order)
-          .map((task) => (
-            <TaskContainer
-              key={nanoid()}
-              draggable
-              onDragStart={(e) => handleDragStart(e, task)}
-              data-set={task.order}
-            >
-              {task.label && task.label?.length > 0 && (
-                <LabelsContainer data-set={task.order}>
-                  {task.label
-                    .sort((a, b) => a.order - b.order)
-                    .map((item) => (
-                      <LabelColor key={nanoid()} data-color={item.color} data-set={task.order}>
-                        {item && item.text !== '' && (
-                          <LabelText data-set={task.order}>{item.text}</LabelText>
-                        )}
-                      </LabelColor>
-                    ))}
-                </LabelsContainer>
-              )}
-              {task.title && (
-                <TitleContainer data-set={task.order}>
-                  <ButtonContainer className="buttons-container" data-set={task.order}>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        setTaskToEdit(task);
-                        handleNewOrEditTask();
-                      }}
-                      title="Edit the Task"
-                    >
-                      <IconEditTaskStyled />
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        if (task && task.id) handleDelete(task.title, task.id);
-                      }}
-                      title="Delete the Task"
-                    >
-                      <IconDeleteTaskStyled />
-                    </Button>
-                  </ButtonContainer>
-                  <TaskTitle data-set={task.order}>{task.title}</TaskTitle>
-                </TitleContainer>
-              )}
-              {task.content && <TaskContent data-set={task.order}>{task.content}</TaskContent>}
-            </TaskContainer>
-          ))}
+        {checkTaskOfCurrentMonth &&
+          tasks
+            .sort((a, b) => a.order - b.order)
+            .map((task) => (
+              <TaskContainer
+                key={nanoid()}
+                draggable
+                onDragStart={(e) => handleDragStart(e, task)}
+                data-set={task.order}
+              >
+                {task.label && task.label?.length > 0 && (
+                  <LabelsContainer data-set={task.order}>
+                    {task.label
+                      .sort((a, b) => a.order - b.order)
+                      .map((item) => (
+                        <LabelColor key={nanoid()} data-color={item.color} data-set={task.order}>
+                          {item && item.text !== '' && (
+                            <LabelText data-set={task.order}>{item.text}</LabelText>
+                          )}
+                        </LabelColor>
+                      ))}
+                  </LabelsContainer>
+                )}
+                {task.title && (
+                  <TitleContainer data-set={task.order}>
+                    <ButtonContainer className="buttons-container" data-set={task.order}>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setTaskToEdit(task);
+                          handleNewOrEditTask();
+                        }}
+                        title="Edit the Task"
+                      >
+                        <IconEditTaskStyled />
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (task && task.id) handleDelete(task.title, task.id);
+                        }}
+                        title="Delete the Task"
+                      >
+                        <IconDeleteTaskStyled />
+                      </Button>
+                    </ButtonContainer>
+                    <TaskTitle data-set={task.order}>{task.title}</TaskTitle>
+                  </TitleContainer>
+                )}
+                {task.content && <TaskContent data-set={task.order}>{task.content}</TaskContent>}
+              </TaskContainer>
+            ))}
       </Tasks>
       <Loading isVisible={isLoading} />
       {showModal && (

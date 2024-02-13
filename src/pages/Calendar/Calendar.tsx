@@ -10,6 +10,7 @@ import { Loading } from 'components/Loading/Loading';
 import { WeekOrMonth } from 'types';
 import { getHolidays } from 'store/holidays/operations';
 import { useAuth } from 'hooks';
+import axios from 'axios';
 
 export default function Calendar(): JSX.Element {
   const INITIAL_WEEK_OR_MONTH: string = localStorage.getItem('weekOrMonth')
@@ -34,12 +35,14 @@ export default function Calendar(): JSX.Element {
   const country = 'UA';
 
   useEffect(() => {
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
     dispatch(
       getTasks({
         ...currentWeekOrMonth,
         weekOrMonthName: localStorage.getItem('weekOrMonth') || 'month',
       })
     );
+    axios.defaults.baseURL = process.env.REACT_APP_NAGER_URL;
     if (country)
       dispatch(
         getHolidays({
