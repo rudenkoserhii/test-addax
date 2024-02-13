@@ -1,4 +1,4 @@
-import { ModalContactEdit } from 'components/ModalContactEdit/ModalContactEdit';
+import { ModalContactEdit } from 'components/ModalTask/ModalTask';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { deleteContact } from 'redux/tasks/operations';

@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from 'styled-components';
-import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
 import back from 'assets/images/button_color.png';
 
 export const InputStyled = styled.input`
@@ -24,40 +22,13 @@ export const LabelStyled = styled.label`
   margin-right: auto;
 `;
 
-export const IconSearchStyled = styled(SearchIcon)`
-  height: ${(p) => p.theme.space[5]}px;
-  width: auto;
-`;
-
-export const Button = styled.button`
+export const ButtonColor = styled.button<{ 'data-color': string }>`
   all: unset;
   appearance: none;
   cursor: pointer;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: ${(p) => p.theme.space[3]}px;
-  transition: all 200ms ease-in;
-  & > svg > path {
-    fill: ${(p) => p.theme.colors.lightblue};
-    transition: all 200ms ease-in;
-  }
-  &:hover {
-    & > svg > path {
-      transition: all 200ms ease-in;
-
-      fill: ${(p) => p.theme.colors.blue};
-    }
-  }
-`;
-
-export const ButtonColor = styled.button`
-  all: unset;
-  appearance: none;
-  cursor: pointer;
-  background-image: ${(p: any) => p['data-color'] === 'black' && `url(${back})`};
+  background-image: ${(p) => p['data-color'] === 'empty' && `url(${back})`};
   background-size: ${(p) => p.theme.space[5]}px ${(p) => p.theme.space[5]}px;
-  background-color: ${(p: any) => (p['data-color'] === 'black' ? 'transparent' : p['data-color'])};
+  background-color: ${(p) => (p['data-color'] === 'empty' ? 'transparent' : p['data-color'])};
   height: ${(p) => p.theme.space[5]}px;
   width: ${(p) => p.theme.space[5]}px;
   border-radius: ${(p) => p.theme.radii.normal};
@@ -79,6 +50,7 @@ export const SelectStyled = styled.form`
   position: absolute;
   top: 100%;
   left: 50%;
+  z-index: 1;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -92,16 +64,16 @@ export const SelectStyled = styled.form`
   transition: all 200ms ease-in;
 `;
 
-export const Option = styled.label`
+export const Option = styled.label<{ 'data-color': string; 'data-checked': boolean }>`
   cursor: pointer;
   height: ${(p) => p.theme.space[5]}px;
   width: ${(p) => p.theme.space[5]}px;
-  background-color: ${(p: any) => p['data-color']};
+  background-color: ${(p) => p['data-color']};
   border-radius: ${(p) => p.theme.radii.normal};
+  outline: ${(p) =>
+    p['data-checked'] ? `${p.theme.space[2]}px solid ${p.theme.colors.grey}` : 'none'};
 `;
+
 export const InputRadio = styled.input`
-  &:checked + label {
-    outline: ${(p) => p.theme.space[2]}px solid ${(p) => p.theme.colors.grey};
-  }
   display: none;
 `;

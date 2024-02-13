@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { checkDate, getCurrentDate } from 'utils';
-import { days } from 'enums';
+import { colors, days } from 'enums';
 import {
   Cell,
   CellTitle,
@@ -14,6 +14,7 @@ import { Task } from 'types';
 import { useSelector } from 'react-redux';
 import { selectAllTasks } from 'store/tasks/selectors';
 import { selectAllHolidays } from 'store/holidays/selectors';
+import { filterColor, filterValue } from 'store/filter/selectors';
 
 const data: Task[] = [
   {
@@ -24,9 +25,15 @@ const data: Task[] = [
     label: [
       {
         id: '11',
-        color: 'red',
+        color: '#FF0000',
         text: 'First label text',
         order: 0,
+      },
+      {
+        id: '12',
+        color: '#800080',
+        text: 'Second label text',
+        order: 1,
       },
     ],
     order: 0,
@@ -39,7 +46,7 @@ const data: Task[] = [
     label: [
       {
         id: '11',
-        color: 'green',
+        color: '#008000',
         text: 'First label text',
         order: 0,
       },
@@ -54,37 +61,37 @@ const data: Task[] = [
     label: [
       {
         id: '11',
-        color: 'yellow',
+        color: '#0000FF',
         text: 'First label text',
         order: 0,
       },
       {
         id: '12',
-        color: 'brown',
+        color: '#FFFF00',
         text: 'Second label text',
         order: 1,
       },
       {
         id: '13',
-        color: 'blue',
+        color: '#800080',
         text: 'Third label text',
         order: 2,
       },
       {
         id: '14',
-        color: 'pink',
+        color: '#FFA500',
         text: 'Fourth label text',
         order: 3,
       },
       {
         id: '15',
-        color: 'orangered',
+        color: '#FFC0CB',
         text: 'Fifth label text',
         order: 4,
       },
       {
         id: '16',
-        color: 'orange',
+        color: '#A52A2A',
         text: 'Sixth label text',
         order: 5,
       },
@@ -98,15 +105,27 @@ export const CalendarGrid = (): JSX.Element => {
   // const [tasks, setTasks] = useState<Task[]>(useSelector(selectAllTasks));
   const [tasks, setTasks] = useState<Task[]>(data);
 
-  const holidays = useSelector(selectAllHolidays);
-  const handleTaskUpdate = (updatedTasks: Task[]) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((prevTask) => {
-        const updatedTask = updatedTasks.find((task) => task.id === prevTask.id);
+  const filterByText = useSelector(filterValue);
+  const filterByColor = useSelector(filterColor);
 
-        return updatedTask || prevTask;
-      })
-    );
+  const holidays = useSelector(selectAllHolidays);
+
+  const handleTaskUpdate = (updatedTasks: Task[]) => {
+    if (updatedTasks.length === 1 && !tasks.some(({ id }) => id === updatedTasks[0].id)) {
+      setTasks((prevTasks) => [...prevTasks, updatedTasks[0]]);
+    } else {
+      setTasks((prevTasks) =>
+        prevTasks.map((prevTask) => {
+          const updatedTask = updatedTasks.find((task) => task.id === prevTask.id);
+
+          return updatedTask || prevTask;
+        })
+      );
+    }
+  };
+
+  const handleTaskDelete = (taskId: string) => {
+    setTasks((prevTasks) => prevTasks.filter(({ id }) => id !== taskId));
   };
 
   const savedWeekOrMonth =
@@ -183,6 +202,19 @@ export const CalendarGrid = (): JSX.Element => {
     setCalendarData(calendarArray);
   };
 
+  function checkColor(label: Task['label']): boolean {
+    if (!label) {
+      return true;
+    }
+    if (filterByColor === '') {
+      return true;
+    } else {
+      return label.some(
+        ({ color }) => colors.find(({ name }) => name === filterByColor)?.hexCode === color
+      );
+    }
+  }
+
   return (
     <Wrapper className="calendar-container" id="screenshot">
       <Table>
@@ -211,15 +243,18 @@ export const CalendarGrid = (): JSX.Element => {
                       tasks?.filter(
                         (item) =>
                           item.date ===
-                          getCurrentDate(
-                            Number(savedWeekOrMonth.split(' ')[1]),
-                            Number(savedWeekOrMonth.split(' ')[0]),
-                            day,
-                            weekOrMonthType
-                          )
+                            getCurrentDate(
+                              Number(savedWeekOrMonth.split(' ')[1]),
+                              Number(savedWeekOrMonth.split(' ')[0]),
+                              day,
+                              weekOrMonthType
+                            ) &&
+                          item.title.toLowerCase().includes(filterByText.toLowerCase().trim()) &&
+                          checkColor(item.label)
                       ) || []
                     }
                     onTaskUpdate={handleTaskUpdate}
+                    onTaskDelete={handleTaskDelete}
                     savedWeekOrMonth={savedWeekOrMonth}
                     weekOrMonthType={weekOrMonthType}
                     holidays={

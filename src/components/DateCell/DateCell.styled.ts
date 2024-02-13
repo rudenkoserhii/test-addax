@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from 'styled-components';
 import { ReactComponent as TaskNewIcon } from 'assets/icons/calendar-new.svg';
 import { ReactComponent as TaskEditIcon } from 'assets/icons/calendar-edit.svg';
@@ -38,6 +37,10 @@ export const Button = styled.button`
       fill: ${(p) => p.theme.colors.blue};
     }
   }
+
+  &.buttons {
+    visibility: hidden;
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -48,6 +51,10 @@ export const Wrapper = styled.div`
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  &:hover > div > .buttons {
+    visibility: visible;
   }
 `;
 export const Title = styled.p`
@@ -106,18 +113,16 @@ export const ButtonContainer = styled.div`
   padding: ${(p) => p.theme.space[2]}px;
 
   position: absolute;
-  top: -${(p) => p.theme.space[2]}px;
+  top: -${(p) => p.theme.space[1]}px;
   right: 0;
   z-index: 11;
 `;
-export const LabelColor = styled.div`
-  cursor: pointer;
-
+export const LabelColor = styled.div<{ 'data-color': string | undefined }>`
   width: calc((100vw - 270px) / 35);
   height: ${(p) => p.theme.space[2]}px;
   border-radius: ${(p) => p.theme.radii.normal};
 
-  background-color: ${(props: any) => props['data-color']};
+  background-color: ${(props) => props['data-color']};
 
   position: relative;
   &:hover > p {
@@ -137,7 +142,7 @@ export const LabelText = styled.p`
   position: absolute;
   bottom: ${(p) => p.theme.space[2]}px;
   left: 0;
-  z-index: 10;
+  z-index: 20;
 `;
 export const TaskTitle = styled.p`
   text-align: left;
@@ -165,6 +170,7 @@ export const Holidays = styled.div`
   text-align: left;
   padding: ${(p) => p.theme.space[2]}px;
   border-radius: ${(p) => p.theme.radii.normal};
+  margin-bottom: ${(p) => p.theme.space[2]}px;
 
   background-color: ${(p) => p.theme.colors.lightgrey};
 `;

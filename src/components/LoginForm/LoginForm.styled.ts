@@ -1,6 +1,20 @@
 import styled from 'styled-components';
 
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+
+  width: 100vw;
+  height: calc(100vh - ${(p) => p.theme.space[13]}px);
+
+  background-color: ${(p) => p.theme.colors.lightgray};
+`;
+
 export const LabelStyled = styled.label`
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-bottom: ${(p) => p.theme.space[4]}px;
@@ -13,7 +27,7 @@ export const ButtonStyled = styled.button`
   font: inherit;
   cursor: pointer;
   outline: none;
-  margin-left: auto;
+  margin: 0 auto;
   border-radius: ${(p) => p.theme.radii.normal};
   padding: ${(p) => p.theme.space[3]}px ${(p) => p.theme.space[4]}px;
   background-color: ${(p) => p.theme.colors.lightblue};
@@ -32,9 +46,12 @@ export const ButtonStyled = styled.button`
 export const FormStyled = styled.form`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 50%;
+  border-radius: ${(p) => p.theme.radii.normal};
+
+  background-color: ${(p) => p.theme.colors.white};
   gap: ${(p) => p.theme.space[2]}px;
-  margin-bottom: ${(p) => p.theme.space[4]}px;
+  padding: ${(p) => p.theme.space[4]}px;
 `;
 
 export const InputStyled = styled.input`
@@ -46,4 +63,27 @@ export const InputStyled = styled.input`
   line-height: ${(p) => p.theme.lineHeights.body};
   letter-spacing: 0.01em;
   resize: none;
+`;
+
+export const Placeholder = styled.div`
+  visibility: hidden;
+  position: absolute;
+  top: -${(p) => p.theme.space[14]}px;
+  left: ${(p) => p.theme.space[3]}px;
+
+  color: ${(p) => p.theme.colors.grey};
+  margin: 0;
+  padding: ${(p) => p.theme.space[0]}px ${(p) => p.theme.space[2]}px;
+  border-radius: ${(p) => p.theme.radii.normal};
+  font: inherit;
+  line-height: ${(p) => p.theme.lineHeights.body};
+  letter-spacing: 0.01em;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    transparent 50%,
+    ${(p) => p.theme.colors.white} 50%,
+    ${(p) => p.theme.colors.white}
+  );
+  background-size: 100% 100%;
 `;

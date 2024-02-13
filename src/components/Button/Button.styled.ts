@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from 'styled-components';
 
-export const ButtonStyled = styled.button`
-  width: ${(p: any) => p.theme.space[p['data-width'] || 7]}px;
+export const ButtonStyled = styled.button<{ 'data-width': number | undefined }>`
+  width: ${(p) => p.theme.space[p['data-width'] || 7]}px;
   height: ${(p) => p.theme.space[10]}px;
 
   border: none;

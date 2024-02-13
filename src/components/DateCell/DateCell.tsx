@@ -19,7 +19,15 @@ import {
   Holidays,
   HolidayTitle,
 } from 'components/DateCell/DateCell.styled';
+import { Loading } from 'components/Loading/Loading';
+import { ModalTask } from 'components/ModalTask/ModalTask';
 import { nanoid } from 'nanoid';
+import Notiflix from 'notiflix';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from 'store/store';
+import { deleteTask } from 'store/tasks/operations';
+import { selectLoading } from 'store/tasks/selectors';
 import { Holiday, Task } from 'types';
 import { getCurrentDate } from 'utils';
 
@@ -27,17 +35,29 @@ export const DateCell = ({
   day,
   tasks,
   onTaskUpdate,
+  onTaskDelete,
   savedWeekOrMonth,
   weekOrMonthType,
   holidays,
 }: {
   day: string;
   tasks: Task[];
-  onTaskUpdate: Function;
+  onTaskUpdate: (value: Task[]) => void;
+  onTaskDelete: (taskId: string) => void;
   savedWeekOrMonth: string;
   weekOrMonthType: string;
   holidays: Holiday[];
 }): JSX.Element => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>();
+
+  const dispatch: AppDispatch = useDispatch();
+  const isLoading = useSelector(selectLoading);
+
+  const toggleModal = (): void => {
+    setShowModal(!showModal);
+  };
+
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, task: Task) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(task));
   };
@@ -86,12 +106,40 @@ export const DateCell = ({
     }
   };
 
+  const handleNewOrEditTask = (): void => toggleModal();
+
+  const handleDelete = (name: string, taskId: string) => {
+    Notiflix.Confirm.show(
+      'Accept Deleting',
+      'Do you want to delete the Task?',
+      'Yes',
+      'No',
+      async () => {
+        try {
+          await dispatch(deleteTask(taskId));
+          Notiflix.Notify.success(`Task '${name}' was deleted!`);
+          onTaskDelete(taskId);
+        } catch (error) {
+          Notiflix.Notify.failure(error.message);
+        }
+      }
+    );
+  };
+
   return (
     <Wrapper onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
       <DateBox>
         <DayStyled>{day}</DayStyled>
         {tasks && tasks.length > 0 && <Title>{`${tasks.length} cards`}</Title>}
-        <Button type="button" onClick={() => console.log('add new')} title="Add the new Task">
+        <Button
+          className="buttons"
+          type="button"
+          onClick={() => {
+            setTaskToEdit(null);
+            handleNewOrEditTask();
+          }}
+          title="Add the new Task"
+        >
           <IconNewTaskStyled />
         </Button>
       </DateBox>
@@ -118,7 +166,9 @@ export const DateCell = ({
                     .sort((a, b) => a.order - b.order)
                     .map((item) => (
                       <LabelColor key={nanoid()} data-color={item.color} data-set={task.order}>
-                        <LabelText data-set={task.order}>{item.text}</LabelText>
+                        {item && item.text !== '' && (
+                          <LabelText data-set={task.order}>{item.text}</LabelText>
+                        )}
                       </LabelColor>
                     ))}
                 </LabelsContainer>
@@ -126,12 +176,21 @@ export const DateCell = ({
               {task.title && (
                 <TitleContainer data-set={task.order}>
                   <ButtonContainer className="buttons-container" data-set={task.order}>
-                    <Button type="button" onClick={() => console.log('edit')} title="Edit the Task">
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setTaskToEdit(task);
+                        handleNewOrEditTask();
+                      }}
+                      title="Edit the Task"
+                    >
                       <IconEditTaskStyled />
                     </Button>
                     <Button
                       type="button"
-                      onClick={() => console.log('delete')}
+                      onClick={() => {
+                        if (task && task.id) handleDelete(task.title, task.id);
+                      }}
                       title="Delete the Task"
                     >
                       <IconDeleteTaskStyled />
@@ -144,6 +203,20 @@ export const DateCell = ({
             </TaskContainer>
           ))}
       </Tasks>
+      <Loading isVisible={isLoading} />
+      {showModal && (
+        <ModalTask
+          onClose={toggleModal}
+          taskToEdit={taskToEdit || undefined}
+          onTaskUpdate={onTaskUpdate}
+          currentDate={getCurrentDate(
+            Number(savedWeekOrMonth.split(' ')[1]),
+            Number(savedWeekOrMonth.split(' ')[0]),
+            day,
+            weekOrMonthType
+          )}
+        />
+      )}
     </Wrapper>
   );
 };
