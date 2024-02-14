@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { checkDate, getCurrentDate } from 'utils';
+import { checkColor, checkDate, getCurrentDate } from 'utils';
 import { colors, days, monthNames } from 'enums';
 import {
   Cell,
@@ -16,7 +16,7 @@ import { selectAllTasks } from 'store/tasks/selectors';
 import { selectAllHolidays } from 'store/holidays/selectors';
 import { filterColor, filterValue } from 'store/filter/selectors';
 
-const data: Task[] = [
+export const data: Task[] = [
   {
     id: '1',
     date: '2024.02.11',
@@ -229,19 +229,6 @@ export const CalendarGrid = (): JSX.Element => {
     setCurrentMonth(monthNames[month - 1].slice(0, 3));
   };
 
-  function checkColor(label: Task['label']): boolean {
-    if (!label) {
-      return true;
-    }
-    if (filterByColor === '') {
-      return true;
-    } else {
-      return label.some(
-        ({ color }) => colors.find(({ name }) => name === filterByColor)?.hexCode === color
-      );
-    }
-  }
-
   return (
     <Wrapper className="calendar-container" id="screenshot">
       <Table>
@@ -280,7 +267,7 @@ export const CalendarGrid = (): JSX.Element => {
                               weekOrMonthType
                             ) &&
                           item.title.toLowerCase().includes(filterByText.toLowerCase().trim()) &&
-                          checkColor(item.label)
+                          checkColor(item.label, filterByColor)
                       ) || []
                     }
                     onTaskUpdate={handleTaskUpdate}

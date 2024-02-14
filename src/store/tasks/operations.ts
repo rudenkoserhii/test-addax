@@ -2,8 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AsyncThunkConfig, GetThunkAPI } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import axios, { AxiosError } from 'axios';
 import { Task, WeekOrMonthRequest } from 'types';
-console.log('REACT_APP_NAGER_URL:', process.env.REACT_APP_NAGER_URL);
-console.log('REACT_APP_BACKEND_HOST:', process.env.REACT_APP_BACKEND_HOST);
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
 export const getTasks = createAsyncThunk(

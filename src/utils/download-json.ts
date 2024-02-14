@@ -1,4 +1,6 @@
-export function downloadJSON(object: { a: string; b: string }) {
+import { Task } from 'types';
+
+export function downloadJSON(object: Task[]) {
   const jsonData = JSON.stringify({ object }, null, 2);
 
   const blob = new Blob([jsonData], { type: 'application/json' });

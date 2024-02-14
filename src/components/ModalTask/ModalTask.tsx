@@ -53,7 +53,7 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
     text?: string | undefined;
     order: number;
   }>(INITIAL_LABEL);
-  // console.log(newLabel);
+
   const dispatch: AppDispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
 
@@ -238,7 +238,7 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
                     id={`modal-edit-label-text-${id}`}
                   />
                   <ButtonColor type="button" data-color={color} title="Select label color">
-                    <SelectStyled onChange={() => console.log('fieldset edit change')}>
+                    <SelectStyled>
                       {colors.map(({ name, hexCode }, idx) => (
                         <Option
                           title={name.replace(name[0], name[0].toUpperCase())}
@@ -369,7 +369,6 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
                             colors.find(({ name }) => input.value === name)?.hexCode ===
                             newLabel.color
                           ) {
-                            console.log('color same');
                             setNewLabel({ ...newLabel, color: 'empty' });
 
                             input?.removeAttribute('checked');
