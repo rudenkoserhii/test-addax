@@ -26,6 +26,7 @@ import { colors } from 'enums';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 import { selectLoading } from 'store/tasks/selectors';
+import axios from 'axios';
 
 const modalRoot = document.querySelector('#modal-root');
 
@@ -60,6 +61,8 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
   const handleSubmit = (event: React.MouseEvent) => {
     event.preventDefault();
     const form = event.currentTarget.parentElement as HTMLFormElement;
+
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
     if (taskToEdit) {
       dispatch(editTask({ ...task, label: labels }));

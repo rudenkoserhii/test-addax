@@ -31,8 +31,7 @@ export default function Calendar(): JSX.Element {
   const dispatch: AppDispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
   const { user } = useAuth();
-  // const { country } = user;
-  const country = 'UA';
+  const { country } = user;
 
   useEffect(() => {
     axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;

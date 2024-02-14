@@ -7,6 +7,7 @@ import { RestrictedRoute } from './RestrictedRoute/RestrictedRoute';
 import { refreshUser } from 'store/auth/operations';
 import { useAuth } from 'hooks';
 import { AppDispatch } from 'store/store';
+import axios from 'axios';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
 const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
@@ -18,6 +19,8 @@ export const App = () => {
   const { isRefreshing } = useAuth();
 
   useEffect(() => {
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+
     dispatch(refreshUser());
   }, [dispatch]);
 
@@ -36,11 +39,11 @@ export const App = () => {
           path="/login"
           element={<RestrictedRoute redirectTo="/calendar" component={<LogInPage />} />}
         />
-        {/* <Route
+        <Route
           path="/calendar"
           element={<PrivateRoute redirectTo="/login" component={<CalendarPage />} />}
-        /> */}
-        <Route path="/calendar" element={<CalendarPage />} />
+        />
+        {/* <Route path="/calendar" element={<CalendarPage />} /> */}
       </Route>
     </Routes>
   );

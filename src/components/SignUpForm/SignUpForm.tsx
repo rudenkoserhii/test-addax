@@ -17,6 +17,7 @@ import { selectAllCountries, selectLoading } from 'store/holidays/selectors';
 import { Loading } from 'components/Loading/Loading';
 import { selectIsLoading } from 'store/auth/selectors';
 import { nanoid } from 'nanoid';
+import axios from 'axios';
 
 export const SignUpForm = (): JSX.Element => {
   const dispatch: AppDispatch = useDispatch();
@@ -33,6 +34,8 @@ export const SignUpForm = (): JSX.Element => {
     event.preventDefault();
     const form = event.currentTarget;
     const formElements = form.elements as FormElements;
+
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
     dispatch(
       signUp({

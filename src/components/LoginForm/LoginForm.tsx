@@ -9,24 +9,22 @@ import {
   Placeholder,
 } from 'components/LogInForm/LogInForm.styled';
 import { AppDispatch } from 'store/store';
-import { FormEvent, useEffect } from 'react';
+import { FormEvent } from 'react';
 import { FormElements } from 'types';
-import { getCountries } from 'store/holidays/operations';
 import { Loading } from 'components/Loading/Loading';
 import { selectIsLoading } from 'store/auth/selectors';
+import axios from 'axios';
 
 export const LogInForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const isLoadingWithLogIn = useSelector(selectIsLoading);
 
-  useEffect(() => {
-    dispatch(getCountries());
-  }, [dispatch]);
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formElements = form.elements as FormElements;
+
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
     dispatch(
       logIn({

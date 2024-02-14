@@ -1,4 +1,4 @@
-import { data } from 'components/CalendarGrid/CalendarGrid';
+// import { data } from 'components/CalendarGrid/CalendarGrid';
 import {
   Button,
   IconImportStyled,
@@ -9,8 +9,8 @@ import { selectAllTasks } from 'store/tasks/selectors';
 import { checkColor, downloadJSON } from 'utils';
 
 export const Import = () => {
-  // const tasks = useSelector(selectAllTasks);
-  const tasks = data;
+  const tasks = useSelector(selectAllTasks);
+  // const tasks = data;
   const filterByText = useSelector(filterValue);
   const filterByColor = useSelector(filterColor);
 
