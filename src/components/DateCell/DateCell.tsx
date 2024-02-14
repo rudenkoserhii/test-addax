@@ -114,6 +114,17 @@ export const DateCell = ({
   const handleNewOrEditTask = (): void => toggleModal();
 
   const handleDelete = (name: string, taskId: string) => {
+    Notiflix.Confirm.init({
+      titleColor: 'blue',
+      okButtonBackground: 'blue',
+    });
+
+    Notiflix.Notify.init({
+      success: {
+        background: 'blue',
+      },
+    });
+
     Notiflix.Confirm.show(
       'Accept Deleting',
       'Do you want to delete the Task?',

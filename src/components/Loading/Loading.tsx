@@ -4,6 +4,9 @@ import Notiflix from 'notiflix';
 export const Loading = ({ isVisible }: { isVisible: boolean }) => {
   useEffect(() => {
     if (isVisible) {
+      Notiflix.Loading.init({
+        svgColor: 'blue',
+      });
       Notiflix.Loading.circle();
     } else {
       Notiflix.Loading.remove();

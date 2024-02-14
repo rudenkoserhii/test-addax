@@ -68,6 +68,12 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
     }
     onTaskUpdate([{ ...task, label: labels }]);
     form.reset();
+    Notiflix.Notify.init({
+      success: {
+        background: 'blue',
+      },
+    });
+
     Notiflix.Notify.success(taskToEdit ? 'The Task was updated!' : 'The Task was created!');
     onClose();
   };
