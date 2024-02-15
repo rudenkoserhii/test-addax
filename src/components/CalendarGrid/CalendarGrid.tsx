@@ -73,7 +73,8 @@ export const CalendarGrid = (): JSX.Element => {
     const currentDate =
       week === 1
         ? new Date(year - 1, 0, 7 - firstDayOfPrevYear + 52 * 7)
-        : new Date(year, 0, 7 - firstDayOfYear + (week - 1) * 7);
+        : new Date(year, 0, 7 - firstDayOfYear + (week - 2) * 7);
+
     const weekArray: string[] = [];
 
     const monthName = currentDate.toLocaleString('default', {
@@ -88,6 +89,22 @@ export const CalendarGrid = (): JSX.Element => {
 
       weekArray.push(formattedDate);
       currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Include dates from the previous and next years
+    for (let yearOffset of [-1, 0, 1]) {
+      const yearFirstDay = new Date(year + yearOffset, 0, 1); // First day of the specified year
+
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(yearFirstDay);
+
+        day.setDate(yearFirstDay.getDate() + i);
+        weekArray.push(
+          day
+            .toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
+            .replace(/-/g, '.')
+        );
+      }
     }
 
     setCalendarData([weekArray]);

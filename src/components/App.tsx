@@ -18,21 +18,23 @@ const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
 export const App = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { isRefreshing } = useAuth();
+  const { isRefreshing, token } = useAuth();
 
   useEffect(() => {
     (async () => {
-      try {
-        axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
-        const response = await dispatch(refreshUser());
+      if (token) {
+        try {
+          axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+          const response = await dispatch(refreshUser());
 
-        if (response.meta.requestStatus === 'rejected') {
-          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+          if (response.meta.requestStatus === 'rejected') {
+            Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
 
-          return;
+            return;
+          }
+        } catch (error) {
+          Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
         }
-      } catch (error) {
-        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
       }
     })();
   }, [dispatch]);

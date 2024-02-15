@@ -1,4 +1,3 @@
-// import { data } from 'components/CalendarGrid/CalendarGrid';
 import {
   Button,
   IconImportStyled,
@@ -10,7 +9,6 @@ import { checkColor, downloadJSON } from 'utils';
 
 export const Import = () => {
   const tasks = useSelector(selectAllTasks);
-  // const tasks = data;
   const filterByText = useSelector(filterValue);
   const filterByColor = useSelector(filterColor);
 
@@ -19,8 +17,7 @@ export const Import = () => {
   const year =
     Number(localStorage.getItem('savedWeekOrMonth')?.split(' ')[1]) || new Date().getFullYear();
   const weekOrMonthType = localStorage.getItem('weekOrMonth') || 'month';
-  console.log('import');
-  console.log(tasks);
+
   const objectToDownload = tasks
     .filter((task) => {
       const taskYear = Number(task?.date?.split('.')[0]);
@@ -29,17 +26,15 @@ export const Import = () => {
       if (weekOrMonthType === 'month') {
         return Number(taskYear) === year && Number(taskMonth) === weekOrMonth;
       } else {
-        console.log('week');
         const weekDates: string[] = [];
-        const firstDayOfWeek = new Date(year, 0, 1); // Assuming the first day of the year is the starting point
+        const firstDayOfWeek = new Date(year, 0, 1);
 
-        // Find the first Sunday on or after January 1st
         const firstSunday =
           firstDayOfWeek.getDate() -
           firstDayOfWeek.getDay() +
           (firstDayOfWeek.getDay() === 0 ? 0 : 7);
 
-        firstDayOfWeek.setDate(firstSunday + (weekOrMonth - 1) * 7); // Move to the starting day of the specified week
+        firstDayOfWeek.setDate(firstSunday + (weekOrMonth - 2) * 7);
         for (let i = 0; i < 7; i++) {
           const day = new Date(firstDayOfWeek);
 
@@ -51,12 +46,13 @@ export const Import = () => {
           );
         }
 
-        // Include dates from the previous year if the week starts before January 1st
-        if (firstDayOfWeek.getFullYear() !== year) {
-          const lastYearFirstDay = new Date(year - 1, 0, 1); // First day of the previous year
+        for (let yearOffset of [-1, 0, 1]) {
+          const yearFirstDay = new Date(year + yearOffset, 0, 1);
+
           for (let i = 0; i < 7; i++) {
-            const day = new Date(lastYearFirstDay);
-            day.setDate(lastYearFirstDay.getDate() + i);
+            const day = new Date(yearFirstDay);
+
+            day.setDate(yearFirstDay.getDate() + i);
             weekDates.push(
               day
                 .toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
@@ -64,7 +60,7 @@ export const Import = () => {
             );
           }
         }
-        console.log(weekDates);
+
         return weekDates.some((weekDate) => weekDate === task?.date);
       }
     })

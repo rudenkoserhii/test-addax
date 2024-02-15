@@ -170,9 +170,10 @@ export const DateCell = ({
   };
 
   const checkTaskOfCurrentMonth =
-    tasks &&
-    tasks.length > 0 &&
-    monthNames[Number(tasks[0]?.date?.split('.')[1]) - 1].slice(0, 3) === month;
+    (tasks &&
+      tasks.length > 0 &&
+      monthNames[Number(tasks[0]?.date?.split('.')[1]) - 1].slice(0, 3) === month) ||
+    weekOrMonthType === 'week';
 
   const checkHolidayOfCurrentMonth =
     holidays &&
@@ -196,7 +197,7 @@ export const DateCell = ({
     <Wrapper
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
-      data-pointer-events={month === currentMonth}
+      data-pointer-events={month === currentMonth || weekOrMonthType === 'week'}
     >
       <DateBox>
         {isLastOrFirstDayOfMonth() && <DayStyled>{month}</DayStyled>}

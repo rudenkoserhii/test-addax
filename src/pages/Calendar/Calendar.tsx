@@ -117,8 +117,8 @@ export default function Calendar(): JSX.Element {
       }
     } else if (localStorage.getItem('weekOrMonth') === 'week') {
       if (currentWeekOrMonth.weekOrMonth === 1) {
-        setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 52 }));
-        localStorage.setItem('savedWeekOrMonth', `52 ${currentWeekOrMonth.year - 1}`);
+        setCurrentWeekOrMonth((prev) => ({ year: prev.year - 1, weekOrMonth: 53 }));
+        localStorage.setItem('savedWeekOrMonth', `53 ${currentWeekOrMonth.year - 1}`);
         if (country) {
           dispatch(
             getHolidays({
@@ -162,7 +162,7 @@ export default function Calendar(): JSX.Element {
         );
       }
     } else if (localStorage.getItem('weekOrMonth') === 'week') {
-      if (currentWeekOrMonth.weekOrMonth === 52) {
+      if (currentWeekOrMonth.weekOrMonth === 53) {
         setCurrentWeekOrMonth((prev) => ({ year: prev.year + 1, weekOrMonth: 1 }));
         localStorage.setItem('savedWeekOrMonth', `1 ${currentWeekOrMonth.year + 1}`);
         if (country) {
@@ -230,7 +230,9 @@ export default function Calendar(): JSX.Element {
 
   const calculateWeekOfYear = (year: number, month: number): number => {
     const firstDayOfYear = new Date(year, 0, 1);
+    console.log(firstDayOfYear);
     const firstDayOfMonth = new Date(year, month - 1, 1);
+    console.log(firstDayOfMonth);
     const msInWeek = 7 * 24 * 60 * 60 * 1000;
 
     const weeks = Math.ceil(
@@ -239,7 +241,7 @@ export default function Calendar(): JSX.Element {
         firstDayOfYear.getDay() * 24 * 60 * 60 * 1000) /
         msInWeek
     );
-
+    console.log(weeks);
     return month !== 1 ? weeks + 1 : weeks === 0 ? weeks + 1 : weeks;
   };
 
