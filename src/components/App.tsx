@@ -12,6 +12,7 @@ import { Loading } from 'components/Loading/Loading';
 import Notiflix from 'notiflix';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
+const LogInPage = lazy(() => import('pages/LogIn/LogIn'));
 const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
 const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
