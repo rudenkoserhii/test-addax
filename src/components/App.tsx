@@ -8,10 +8,11 @@ import { refreshUser } from 'store/auth/operations';
 import { useAuth } from 'hooks';
 import { AppDispatch } from 'store/store';
 import axios from 'axios';
+import { Loading } from 'components/Loading/Loading';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
 const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
-const LogInPage = lazy(() => import('pages/LogIn/LogIn'));
+const LogInPage = lazy(() => import('pages/LogbIn/LogbIn'));
 const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
 export const App = () => {
@@ -25,7 +26,7 @@ export const App = () => {
   }, [dispatch]);
 
   return isRefreshing ? (
-    <b>Refreshing user...</b>
+    <Loading isVisible={true} />
   ) : (
     <Routes>
       <Route path="/" element={<LayOut />}>
@@ -43,7 +44,6 @@ export const App = () => {
           path="/calendar"
           element={<PrivateRoute redirectTo="/login" component={<CalendarPage />} />}
         />
-        {/* <Route path="/calendar" element={<CalendarPage />} /> */}
       </Route>
     </Routes>
   );
