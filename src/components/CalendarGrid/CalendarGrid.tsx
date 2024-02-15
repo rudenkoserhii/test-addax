@@ -16,94 +16,11 @@ import { selectAllTasks } from 'store/tasks/selectors';
 import { selectAllHolidays } from 'store/holidays/selectors';
 import { filterColor, filterValue } from 'store/filter/selectors';
 
-// export const data: Task[] = [
-//   {
-//     id: '1',
-//     date: '2024.02.11',
-//     title: 'First',
-//     content: 'First first',
-//     label: [
-//       {
-//         id: '11',
-//         color: '#FF0000',
-//         text: 'First label text',
-//         order: 0,
-//       },
-//       {
-//         id: '12',
-//         color: '#800080',
-//         text: 'Second label text',
-//         order: 1,
-//       },
-//     ],
-//     order: 0,
-//   },
-//   {
-//     id: '2',
-//     date: '2024.02.12',
-//     title: 'Second',
-//     content: 'Second second',
-//     label: [
-//       {
-//         id: '11',
-//         color: '#008000',
-//         text: 'First label text',
-//         order: 0,
-//       },
-//     ],
-//     order: 0,
-//   },
-//   {
-//     id: '3',
-//     date: '2024.02.12',
-//     title: 'Third',
-//     content: 'Second second',
-//     label: [
-//       {
-//         id: '11',
-//         color: '#0000FF',
-//         text: 'First label text',
-//         order: 0,
-//       },
-//       {
-//         id: '12',
-//         color: '#FFFF00',
-//         text: 'Second label text',
-//         order: 1,
-//       },
-//       {
-//         id: '13',
-//         color: '#800080',
-//         text: 'Third label text',
-//         order: 2,
-//       },
-//       {
-//         id: '14',
-//         color: '#FFA500',
-//         text: 'Fourth label text',
-//         order: 3,
-//       },
-//       {
-//         id: '15',
-//         color: '#FFC0CB',
-//         text: 'Fifth label text',
-//         order: 4,
-//       },
-//       {
-//         id: '16',
-//         color: '#A52A2A',
-//         text: 'Sixth label text',
-//         order: 5,
-//       },
-//     ],
-//     order: 1,
-//   },
-// ];
-
 export const CalendarGrid = (): JSX.Element => {
+  const allTasks = useSelector(selectAllTasks);
+
   const [calendarData, setCalendarData] = useState<string[][]>([]);
-  const [tasks, setTasks] = useState<Task[]>(useSelector(selectAllTasks));
-  // const [tasks, setTasks] = useState<Task[]>(data);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [currentMonth, setCurrentMonth] = useState<string>(
     monthNames[new Date().getMonth()].slice(0, 3)
   );
@@ -111,6 +28,10 @@ export const CalendarGrid = (): JSX.Element => {
   const filterByColor = useSelector(filterColor);
 
   const holidays = useSelector(selectAllHolidays);
+
+  useEffect(() => {
+    setTasks(allTasks);
+  }, [allTasks]);
 
   const handleTaskUpdate = (updatedTasks: Task[]) => {
     if (updatedTasks.length === 1 && !tasks.some(({ id }) => id === updatedTasks[0].id)) {
@@ -124,10 +45,6 @@ export const CalendarGrid = (): JSX.Element => {
         })
       );
     }
-  };
-
-  const handleTaskDelete = (taskId: string) => {
-    setTasks((prevTasks) => prevTasks.filter(({ id }) => id !== taskId));
   };
 
   const savedWeekOrMonth =
@@ -267,11 +184,10 @@ export const CalendarGrid = (): JSX.Element => {
                               weekOrMonthType
                             ) &&
                           item.title.toLowerCase().includes(filterByText.toLowerCase().trim()) &&
-                          checkColor(item.label, filterByColor)
+                          checkColor(item.labels, filterByColor)
                       ) || []
                     }
                     onTaskUpdate={handleTaskUpdate}
-                    onTaskDelete={handleTaskDelete}
                     savedWeekOrMonth={savedWeekOrMonth}
                     weekOrMonthType={weekOrMonthType}
                     holidays={

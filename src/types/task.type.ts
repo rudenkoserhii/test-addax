@@ -3,7 +3,7 @@ type Task = {
   date?: string;
   title: string;
   content?: string;
-  label?: {
+  labels?: {
     id?: string;
     color?: string;
     text?: string;

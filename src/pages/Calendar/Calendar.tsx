@@ -35,12 +35,7 @@ export default function Calendar(): JSX.Element {
 
   useEffect(() => {
     axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
-    dispatch(
-      getTasks({
-        ...currentWeekOrMonth,
-        weekOrMonthName: localStorage.getItem('weekOrMonth') || 'month',
-      })
-    );
+    dispatch(getTasks());
     axios.defaults.baseURL = process.env.REACT_APP_NAGER_URL;
     if (country)
       dispatch(

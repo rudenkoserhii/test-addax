@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { SerializedError, createSlice } from '@reduxjs/toolkit';
 import { logOut } from 'store/auth/operations';
 import { getTasks, addTask, deleteTask, editTask } from './operations';
 import { AxiosError } from 'axios';
@@ -8,7 +9,6 @@ const handlePending = (state: StateTasks) => {
   state.isLoading = true;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleRejected = (state: StateTasks, action: any) => {
   state.isLoading = false;
   state.error = action.payload;
@@ -17,15 +17,15 @@ const handleRejected = (state: StateTasks, action: any) => {
 export type StateTasks = {
   tasks: Task[];
   isLoading: boolean;
-  error: AxiosError | null;
+  error: AxiosError<unknown> | null;
 };
 
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState: <StateTasks>{
-    tasks: [],
+    tasks: [] as Task[],
     isLoading: false,
-    error: null,
+    error: null as SerializedError | null,
   },
   extraReducers: (builder) => {
     builder
@@ -63,7 +63,7 @@ const tasksSlice = createSlice({
           date: action.payload.date,
           title: action.payload.title,
           content: action.payload.content,
-          label: action.payload.label,
+          labels: action.payload.labels,
           order: action.payload.order,
         };
 

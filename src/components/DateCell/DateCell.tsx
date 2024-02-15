@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   Wrapper,
   Title,
@@ -8,7 +9,6 @@ import {
   LabelsContainer,
   ButtonContainer,
   LabelColor,
-  LabelText,
   TaskTitle,
   TaskContent,
   IconNewTaskStyled,
@@ -27,7 +27,7 @@ import Notiflix from 'notiflix';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'store/store';
-import { deleteTask } from 'store/tasks/operations';
+import { deleteTask, editTask, getTasks } from 'store/tasks/operations';
 import { selectLoading } from 'store/tasks/selectors';
 import { Holiday, Task } from 'types';
 import { getCurrentDate } from 'utils';
@@ -38,7 +38,6 @@ export const DateCell = ({
   currentMonth,
   tasks,
   onTaskUpdate,
-  onTaskDelete,
   savedWeekOrMonth,
   weekOrMonthType,
   holidays,
@@ -48,7 +47,6 @@ export const DateCell = ({
   currentMonth: string;
   tasks: Task[];
   onTaskUpdate: (value: Task[]) => void;
-  onTaskDelete: (taskId: string) => void;
   savedWeekOrMonth: string;
   weekOrMonthType: string;
   holidays: Holiday[];
@@ -107,7 +105,21 @@ export const DateCell = ({
         updatedTasks.push(draggedTask);
       }
 
-      onTaskUpdate(updatedTasks);
+      axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+
+      try {
+        updatedTasks.forEach(async (updatedTask) => {
+          const response = await dispatch(editTask(updatedTask));
+
+          if (response.meta.requestStatus === 'rejected') {
+            Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+            return;
+          }
+        });
+      } catch (error) {
+        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+      }
     }
   };
 
@@ -132,11 +144,26 @@ export const DateCell = ({
       'No',
       async () => {
         try {
-          await dispatch(deleteTask(taskId));
+          axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+
+          const response = await dispatch(deleteTask(taskId));
+
+          if (response.meta.requestStatus === 'rejected') {
+            Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+            return;
+          }
+
           Notiflix.Notify.success(`Task '${name}' was deleted!`);
-          onTaskDelete(taskId);
+          const responseWithTasks = await dispatch(getTasks());
+
+          if (responseWithTasks.meta.requestStatus === 'rejected') {
+            Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+            return;
+          }
         } catch (error) {
-          Notiflix.Notify.failure(error.message);
+          Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
         }
       }
     );
@@ -198,26 +225,34 @@ export const DateCell = ({
       )}
       <Tasks>
         {checkTaskOfCurrentMonth &&
-          tasks
-            .sort((a, b) => a.order - b.order)
-            .map((task) => (
+          tasks &&
+          tasks.length > 0 &&
+          (() => {
+            const sortedTasks = [...tasks].sort((a, b) => b.order - a.order);
+
+            return sortedTasks.map((task) => (
               <TaskContainer
                 key={nanoid()}
                 draggable
                 onDragStart={(e) => handleDragStart(e, task)}
                 data-set={task.order}
               >
-                {task.label && task.label?.length > 0 && (
+                {task.labels && task.labels?.length > 0 && (
                   <LabelsContainer data-set={task.order}>
-                    {task.label
-                      .sort((a, b) => a.order - b.order)
-                      .map((item) => (
-                        <LabelColor key={nanoid()} data-color={item.color} data-set={task.order}>
-                          {item && item.text !== '' && (
-                            <LabelText data-set={task.order}>{item.text}</LabelText>
-                          )}
-                        </LabelColor>
-                      ))}
+                    {task.labels &&
+                      task.labels.length > 0 &&
+                      (() => {
+                        const sortedLabels = [...task.labels].sort((a, b) => b.order - a.order);
+
+                        return sortedLabels.map((item) => (
+                          <LabelColor
+                            key={nanoid()}
+                            data-color={item.color}
+                            data-set={task.order}
+                            title={item.text}
+                          />
+                        ));
+                      })()}
                   </LabelsContainer>
                 )}
                 {task.title && (
@@ -248,14 +283,15 @@ export const DateCell = ({
                 )}
                 {task.content && <TaskContent data-set={task.order}>{task.content}</TaskContent>}
               </TaskContainer>
-            ))}
+            ));
+          })()}
       </Tasks>
       <Loading isVisible={isLoading} />
       {showModal && (
         <ModalTask
           onClose={toggleModal}
           taskToEdit={taskToEdit || undefined}
-          onTaskUpdate={onTaskUpdate}
+          nextOrder={tasks ? tasks.length : 0}
           currentDate={getCurrentDate(
             Number(savedWeekOrMonth.split(' ')[1]),
             Number(savedWeekOrMonth.split(' ')[0]),

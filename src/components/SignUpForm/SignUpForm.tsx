@@ -27,6 +27,7 @@ export const SignUpForm = (): JSX.Element => {
   const countries = useSelector(selectAllCountries);
 
   useEffect(() => {
+    axios.defaults.baseURL = process.env.REACT_APP_NAGER_URL;
     dispatch(getCountries());
   }, [dispatch]);
 

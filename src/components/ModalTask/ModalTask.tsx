@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { editTask, addTask } from 'store/tasks/operations';
+import { editTask, addTask, getTasks } from 'store/tasks/operations';
 import {
   Wrapper,
   Overlay,
@@ -33,20 +33,20 @@ const modalRoot = document.querySelector('#modal-root');
 type ModalProps = {
   taskToEdit: Task | undefined;
   onClose: () => void;
-  onTaskUpdate: (value: Task[]) => void;
+  nextOrder: number;
   currentDate: string;
 };
 
-export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: ModalProps) => {
+export const ModalTask = ({ onClose, taskToEdit, nextOrder, currentDate }: ModalProps) => {
   const [task, setTask] = useState<Task>(
     taskToEdit || {
       id: nanoid(),
       date: currentDate,
       title: '',
-      order: 0,
+      order: nextOrder,
     }
   );
-  const [labels, setLabels] = useState<Task['label'] | []>(taskToEdit?.label || []);
+  const [labels, setLabels] = useState<Task['labels'] | []>(taskToEdit?.labels || []);
   const INITIAL_LABEL = { id: nanoid(), color: 'empty', text: '', order: labels?.length || 0 };
   const [newLabel, setNewLabel] = useState<{
     id?: string | undefined;
@@ -58,18 +58,64 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
   const dispatch: AppDispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
 
-  const handleSubmit = (event: React.MouseEvent) => {
+  const handleSubmit = async (event: React.MouseEvent): Promise<void> => {
     event.preventDefault();
     const form = event.currentTarget.parentElement as HTMLFormElement;
 
     axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
     if (taskToEdit) {
-      dispatch(editTask({ ...task, label: labels }));
+      try {
+        const response = await dispatch(
+          editTask({
+            ...task,
+            labels: labels?.map((label) => ({
+              id: label.id && label.id?.length > 22 ? label.id : undefined,
+              color: label.color,
+              text: label.text ? label.text : '',
+              order: label.order,
+            })),
+          })
+        );
+
+        if (response.meta.requestStatus === 'rejected') {
+          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+          return;
+        }
+      } catch (error) {
+        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+      }
     } else {
-      dispatch(addTask({ ...task, label: labels }));
+      try {
+        const response = await dispatch(
+          addTask({
+            ...task,
+            labels: labels?.map((label) => ({
+              color: label.color,
+              text: label.text ? label.text : '',
+              order: label.order,
+            })),
+          })
+        );
+
+        if (response.meta.requestStatus === 'rejected') {
+          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+          return;
+        }
+
+        const responseWithTasks = await dispatch(getTasks());
+
+        if (responseWithTasks.meta.requestStatus === 'rejected') {
+          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+          return;
+        }
+      } catch (error) {
+        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+      }
     }
-    onTaskUpdate([{ ...task, label: labels }]);
     form.reset();
     Notiflix.Notify.init({
       success: {
@@ -110,17 +156,17 @@ export const ModalTask = ({ onClose, taskToEdit, onTaskUpdate, currentDate }: Mo
       } else if (
         task?.title !== taskToEdit.title ||
         task.content !== taskToEdit.content ||
-        labels?.length !== taskToEdit.label?.length ||
+        labels?.length !== taskToEdit.labels?.length ||
         labels?.some(
           (label1) =>
-            !taskToEdit?.label?.some(
+            !taskToEdit?.labels?.some(
               (label2) =>
                 label1.id === label2.id &&
                 label1.color === label2.color &&
                 label1.text === label2.text
             )
         ) ||
-        taskToEdit?.label?.some(
+        taskToEdit?.labels?.some(
           (label2) =>
             !labels?.some(
               (label1) =>

@@ -47,6 +47,7 @@ export const Wrapper = styled.div<{ 'data-pointer-events': boolean }>`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: visible !important;
   scrollbar-width: none;
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
@@ -78,8 +79,12 @@ export const TitleContainer = styled.div`
   position: relative;
 `;
 
-export const Tasks = styled.div``;
+export const Tasks = styled.div`
+  max-width: 100%;
+`;
 export const TaskContainer = styled.div`
+  max-width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -96,6 +101,7 @@ export const TaskContainer = styled.div`
   }
 `;
 export const LabelsContainer = styled.div`
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -120,33 +126,19 @@ export const ButtonContainer = styled.div`
   z-index: 11;
 `;
 export const LabelColor = styled.div<{ 'data-color': string | undefined }>`
-  width: calc((100vw - 270px) / 35);
+  width: calc((100vw - 280px) / 35);
   height: ${(p) => p.theme.space[2]}px;
   border-radius: ${(p) => p.theme.radii.normal};
 
   background-color: ${(props) => props['data-color']};
 
   position: relative;
-  &:hover > p {
-    display: block;
-  }
 `;
-export const LabelText = styled.p`
-  display: none;
-  font-size: ${(p) => p.theme.fontSizes.xs};
-  white-space: nowrap;
 
-  border-radius: ${(p) => p.theme.radii.normal};
-  background-color: ${(p) => p.theme.colors.lightgray};
-  opacity: 0.5;
-  padding: ${(p) => p.theme.space[1]}px;
-
-  position: absolute;
-  bottom: ${(p) => p.theme.space[2]}px;
-  left: 0;
-  z-index: 20;
-`;
 export const TaskTitle = styled.p`
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: left;
   font-weight: ${(p) => p.theme.fontWeights.bold};
   font-size: ${(p) => p.theme.fontSizes.s};
@@ -154,6 +146,9 @@ export const TaskTitle = styled.p`
   margin-bottom: ${(p) => p.theme.space[2]}px;
 `;
 export const TaskContent = styled.p`
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: ${(p) => p.theme.fontSizes.xs};
 `;
 

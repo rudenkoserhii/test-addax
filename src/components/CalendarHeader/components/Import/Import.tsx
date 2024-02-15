@@ -71,7 +71,7 @@ export const Import = () => {
     .filter(
       (task) =>
         task.title.toLowerCase().includes(filterByText.toLowerCase().trim()) &&
-        checkColor(task.label, filterByColor)
+        checkColor(task.labels, filterByColor)
     );
 
   return (
