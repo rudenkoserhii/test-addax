@@ -13,7 +13,6 @@ import Notiflix from 'notiflix';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
 const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
-const LogInPage = lazy(() => import('pages/LogIn/LogIn'));
 const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
 export const App = () => {
