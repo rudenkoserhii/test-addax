@@ -91,22 +91,6 @@ export const CalendarGrid = (): JSX.Element => {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Include dates from the previous and next years
-    for (let yearOffset of [-1, 0, 1]) {
-      const yearFirstDay = new Date(year + yearOffset, 0, 1); // First day of the specified year
-
-      for (let i = 0; i < 7; i++) {
-        const day = new Date(yearFirstDay);
-
-        day.setDate(yearFirstDay.getDate() + i);
-        weekArray.push(
-          day
-            .toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
-            .replace(/-/g, '.')
-        );
-      }
-    }
-
     setCalendarData([weekArray]);
     setCurrentMonth(monthName.slice(0, 3));
   };
@@ -158,7 +142,6 @@ export const CalendarGrid = (): JSX.Element => {
 
       calendarArray.push(weekArray);
     }
-
     setCalendarData(calendarArray);
     setCurrentMonth(monthNames[month - 1].slice(0, 3));
   };
