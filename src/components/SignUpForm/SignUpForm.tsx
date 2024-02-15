@@ -18,6 +18,7 @@ import { Loading } from 'components/Loading/Loading';
 import { selectIsLoading } from 'store/auth/selectors';
 import { nanoid } from 'nanoid';
 import axios from 'axios';
+import Notiflix from 'notiflix';
 
 export const SignUpForm = (): JSX.Element => {
   const dispatch: AppDispatch = useDispatch();
@@ -27,26 +28,56 @@ export const SignUpForm = (): JSX.Element => {
   const countries = useSelector(selectAllCountries);
 
   useEffect(() => {
-    axios.defaults.baseURL = process.env.REACT_APP_NAGER_URL;
-    dispatch(getCountries());
+    (async () => {
+      try {
+        axios.defaults.baseURL = process.env.REACT_APP_NAGER_URL;
+        const response = await dispatch(getCountries());
+
+        if (response.meta.requestStatus === 'rejected') {
+          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+          return;
+        }
+      } catch (error) {
+        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+      }
+    })();
   }, [dispatch]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formElements = form.elements as FormElements;
 
-    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+    try {
+      axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
-    dispatch(
-      signUp({
-        name: formElements?.name?.value,
-        email: formElements?.email?.value,
-        password: formElements?.password?.value,
-        country: formElements?.country?.value,
-      })
-    );
+      const response = await dispatch(
+        signUp({
+          name: formElements?.name?.value,
+          email: formElements?.email?.value,
+          password: formElements?.password?.value,
+          country: formElements?.country?.value,
+        })
+      );
+
+      if (response.meta.requestStatus === 'rejected') {
+        Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+        return;
+      }
+    } catch (error) {
+      Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+    }
+
     form.reset();
+    Notiflix.Notify.init({
+      success: {
+        background: 'blue',
+      },
+    });
+
+    Notiflix.Notify.success('Successfull sign up!');
   };
 
   return (

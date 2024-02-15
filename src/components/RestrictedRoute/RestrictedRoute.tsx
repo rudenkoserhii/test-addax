@@ -9,7 +9,6 @@ export const RestrictedRoute = ({
   redirectTo: string;
 }) => {
   const { isLoggedIn } = useAuth();
-  // const isLoggedIn = true;
 
   return isLoggedIn ? <Navigate to={redirectTo} /> : Component;
 };

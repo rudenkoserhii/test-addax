@@ -4,6 +4,7 @@ import { useAuth } from 'hooks';
 import { Wrapper, Text, ButtonStyled, Span } from './UserMenu.styled';
 import { AppDispatch } from 'store/store';
 import axios from 'axios';
+import Notiflix from 'notiflix';
 
 export const UserMenu = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,9 +17,20 @@ export const UserMenu = () => {
       </Text>
       <ButtonStyled
         type="button"
-        onClick={() => {
-          axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
-          dispatch(logOut());
+        onClick={async () => {
+          try {
+            axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+
+            const response = await dispatch(logOut());
+
+            if (response.meta.requestStatus === 'rejected') {
+              Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+              return;
+            }
+          } catch (error) {
+            Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+          }
         }}
       >
         Logout

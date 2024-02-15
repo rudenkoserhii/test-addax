@@ -11,6 +11,7 @@ import { WeekOrMonth } from 'types';
 import { getHolidays } from 'store/holidays/operations';
 import { useAuth } from 'hooks';
 import axios from 'axios';
+import Notiflix from 'notiflix';
 
 export default function Calendar(): JSX.Element {
   const INITIAL_WEEK_OR_MONTH: string = localStorage.getItem('weekOrMonth')
@@ -34,6 +35,50 @@ export default function Calendar(): JSX.Element {
   const { country } = user;
 
   useEffect(() => {
+    if (!localStorage.getItem('weekOrMonth')) {
+      localStorage.setItem('weekOrMonth', 'month');
+    }
+    if (!localStorage.getItem('savedWeekOrMonth')) {
+      localStorage.setItem(
+        'savedWeekOrMonth',
+        `${new Date().getMonth() + 1} ${new Date().getFullYear()}`
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+        const response = await dispatch(getTasks());
+
+        if (response.meta.requestStatus === 'rejected') {
+          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+          return;
+        }
+
+        if (country) {
+          const responseHolidays = await dispatch(
+            getHolidays({
+              year:
+                localStorage.getItem('savedWeekOrMonth')?.split(' ')[1] ||
+                String(new Date().getFullYear()),
+              countryCode: country,
+            })
+          );
+
+          if (responseHolidays.meta.requestStatus === 'rejected') {
+            Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+            return;
+          }
+        }
+      } catch (error) {
+        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+      }
+    })();
+
     axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
     dispatch(getTasks());
     axios.defaults.baseURL = process.env.REACT_APP_NAGER_URL;

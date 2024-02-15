@@ -14,25 +14,44 @@ import { FormElements } from 'types';
 import { Loading } from 'components/Loading/Loading';
 import { selectIsLoading } from 'store/auth/selectors';
 import axios from 'axios';
+import Notiflix from 'notiflix';
 
 export const LogInForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const isLoadingWithLogIn = useSelector(selectIsLoading);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formElements = form.elements as FormElements;
 
-    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+    try {
+      axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
 
-    dispatch(
-      logIn({
-        email: formElements?.email?.value,
-        password: formElements?.password?.value,
-      })
-    );
+      const response = await dispatch(
+        logIn({
+          email: formElements?.email?.value,
+          password: formElements?.password?.value,
+        })
+      );
+
+      if (response.meta.requestStatus === 'rejected') {
+        Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+        return;
+      }
+    } catch (error) {
+      Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+    }
+
     form.reset();
+    Notiflix.Notify.init({
+      success: {
+        background: 'blue',
+      },
+    });
+
+    Notiflix.Notify.success('Successfull logining');
   };
 
   return (

@@ -9,10 +9,11 @@ import { useAuth } from 'hooks';
 import { AppDispatch } from 'store/store';
 import axios from 'axios';
 import { Loading } from 'components/Loading/Loading';
+import Notiflix from 'notiflix';
 
 const HomePage = lazy(() => import('pages/Home/Home'));
 const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
-const LogInPage = lazy(() => import('pages/LogbIn/LogbIn'));
+const LogInPage = lazy(() => import('pages/LogIn/LogIn'));
 const CalendarPage = lazy(() => import('pages/Calendar/Calendar'));
 
 export const App = () => {
@@ -20,9 +21,20 @@ export const App = () => {
   const { isRefreshing } = useAuth();
 
   useEffect(() => {
-    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+    (async () => {
+      try {
+        axios.defaults.baseURL = process.env.REACT_APP_BACKEND_HOST;
+        const response = await dispatch(refreshUser());
 
-    dispatch(refreshUser());
+        if (response.meta.requestStatus === 'rejected') {
+          Notiflix.Notify.failure(`Something went wrong - ${response.payload}!`);
+
+          return;
+        }
+      } catch (error) {
+        Notiflix.Notify.failure(`Something went wrong - ${error.message}`);
+      }
+    })();
   }, [dispatch]);
 
   return isRefreshing ? (
