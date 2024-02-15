@@ -1,9 +1,9 @@
 import { useEffect, lazy } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { LayOut } from './LayOut/LayOut';
-import { PrivateRoute } from './PrivateRoute/PrivateRoute';
-import { RestrictedRoute } from './RestrictedRoute/RestrictedRoute';
+import { LayOut } from 'components/LayOut/LayOut';
+import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
+import { RestrictedRoute } from 'components/RestrictedRoute/RestrictedRoute';
 import { refreshUser } from 'store/auth/operations';
 import { useAuth } from 'hooks';
 import { AppDispatch } from 'store/store';
