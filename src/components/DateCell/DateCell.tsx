@@ -181,6 +181,10 @@ export const DateCell = ({
     monthNames[Number(holidays[0]?.date?.split('-')[1]) - 1].slice(0, 3) === month;
 
   const isLastOrFirstDayOfMonth = () => {
+    if (weekOrMonthType === 'week') {
+      return true;
+    }
+
     const year = Number(savedWeekOrMonth.split(' ')[1]);
     const neededMonth = monthNames.findIndex(
       (monthName) => monthName.slice(0, 3).toLowerCase() === month.toLowerCase()
