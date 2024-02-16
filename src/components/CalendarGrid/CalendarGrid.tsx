@@ -77,12 +77,12 @@ export const CalendarGrid = (): JSX.Element => {
 
     const weekArray: string[] = [];
 
-    const monthName = currentDate.toLocaleString('default', {
+    const monthName = currentDate.toLocaleString('en-US', {
       month: 'short',
     });
 
     for (let i = 0; i < 7; i++) {
-      const formattedDate = currentDate.toLocaleString('default', {
+      const formattedDate = currentDate.toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
       });
@@ -111,7 +111,7 @@ export const CalendarGrid = (): JSX.Element => {
         if (i === 0 && j < firstDayOfMonth) {
           const prevMonthDays =
             firstDayOfMonth > 0
-              ? new Date(year, month - 1, -firstDayOfMonth + 1 + j).toLocaleString('default', {
+              ? new Date(year, month - 1, -firstDayOfMonth + 1 + j).toLocaleString('en-US', {
                   month: 'short',
                   day: 'numeric',
                 })
@@ -120,7 +120,7 @@ export const CalendarGrid = (): JSX.Element => {
           weekArray.push(prevMonthDays);
         } else if (dayCounter > daysInMonth) {
           const nextMonthDays = new Date(year, month, dayCounter - daysInMonth).toLocaleString(
-            'default',
+            'en-US',
             {
               month: 'short',
               day: 'numeric',
@@ -130,7 +130,7 @@ export const CalendarGrid = (): JSX.Element => {
           weekArray.push(nextMonthDays);
           dayCounter++;
         } else {
-          const currentMonthDays = new Date(year, month - 1, dayCounter).toLocaleString('default', {
+          const currentMonthDays = new Date(year, month - 1, dayCounter).toLocaleString('en-US', {
             month: 'short',
             day: 'numeric',
           });
