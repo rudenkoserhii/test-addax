@@ -230,19 +230,19 @@ export default function Calendar(): JSX.Element {
 
   const calculateWeekOfYear = (year: number, month: number): number => {
     const firstDayOfYear = new Date(year, 0, 1);
-    console.log(firstDayOfYear);
-    const firstDayOfMonth = new Date(year, month - 1, 1);
-    console.log(firstDayOfMonth);
-    const msInWeek = 7 * 24 * 60 * 60 * 1000;
 
-    const weeks = Math.ceil(
+    const firstDayOfMonth = new Date(year, month - 1, 1);
+
+    const msInWeek = 7 * 24 * 60 * 60 * 1000;
+    const weeksWithDecimals =
       (firstDayOfMonth.getTime() -
         firstDayOfYear.getTime() +
         firstDayOfYear.getDay() * 24 * 60 * 60 * 1000) /
-        msInWeek
-    );
-    console.log(weeks);
-    return month !== 1 ? weeks + 1 : weeks === 0 ? weeks + 1 : weeks;
+      msInWeek;
+
+    return weeksWithDecimals - Math.floor(weeksWithDecimals) === 0
+      ? weeksWithDecimals + 1
+      : Math.ceil(weeksWithDecimals);
   };
 
   return (
