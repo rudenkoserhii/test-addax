@@ -5,6 +5,10 @@ const handlePending = (state: StateAuth) => {
   state.isLoading = true;
 };
 
+const handleRejected = (state: StateAuth) => {
+  state.isLoading = false;
+};
+
 export type StateAuth = {
   user: { name?: string | null; email: string | null; country: string | null };
   token: string | null;
@@ -29,7 +33,8 @@ const authSlice = createSlice({
     builder
       .addCase(signUp.pending, handlePending)
       .addCase(logIn.pending, handlePending)
-
+      .addCase(signUp.rejected, handleRejected)
+      .addCase(logIn.rejected, handleRejected)
       .addCase(signUp.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
